@@ -2,14 +2,19 @@ import { defineConfig } from 'vite'; // Import defineConfig once
 import react from '@vitejs/plugin-react'; // Import the React plugin
 import dotenv from 'dotenv';
 
-// Load environment variables from .env
 dotenv.config();
 
-// Export the Vite configuration
 export default defineConfig({
+  base: "/",
   plugins: [react()],
-  server: {
-    port: process.env.VITE_PORT,
-    host: process.env.VITE_HOST,
+  preview: {
+   port: process.env.VITE_PORT,
+   strictPort: true,
   },
-});
+  server: {
+   port: process.env.VITE_PORT,
+   strictPort: true,
+   host: true,
+   origin: process.env.VITE_ORIGIN
+  },
+ });

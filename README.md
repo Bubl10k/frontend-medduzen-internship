@@ -4,6 +4,7 @@
 
 - Node.js
 - npm
+- Docker
 
 ## Installation
 
@@ -16,13 +17,11 @@
   git clone https://github.com/Bubl10k/frontend-medduzen-internship.git
 ```
 
-#### 2. Install dependencies:
+#### 2. Build and Run application within Docker Compose:
 
 ```bash
-  npm install
+  docker-compose run --build
 ```
-#### 3. Start the React Vite development server:
 
-```bash
-  npm run dev
-```
+
+
