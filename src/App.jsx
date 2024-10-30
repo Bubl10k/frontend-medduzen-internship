@@ -1,7 +1,7 @@
-import { Container } from "@mui/material"
-import { BrowserRouter } from "react-router-dom"
-import AppRouter from "./components/AppRouter"
-import Header from "./components/Header"
+import { Container } from '@mui/material';
+import { BrowserRouter } from 'react-router-dom';
+import AppRouter from './components/AppRouter';
+import Header from './components/Header';
 
 const App = () => {
   return (
@@ -11,7 +11,7 @@ const App = () => {
         <AppRouter />
       </BrowserRouter>
     </Container>
-  )
-}
+  );
+};
 
-export default App
+export default App;
