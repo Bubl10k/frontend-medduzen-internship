@@ -1,10 +1,16 @@
-import StartPage from "./pages/StartPage"
+import { Container } from "@mui/material"
+import { BrowserRouter } from "react-router-dom"
+import AppRouter from "./components/AppRouter"
+import Header from "./components/Header"
 
 const App = () => {
   return (
-    <div className="App">
-      <StartPage />
-    </div>
+    <Container maxWidth="xl">
+      <BrowserRouter>
+        <Header />
+        <AppRouter />
+      </BrowserRouter>
+    </Container>
   )
 }
 
