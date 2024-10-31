@@ -1,10 +1,11 @@
 import { Avatar, Container, Paper, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { companies } from './MockedData';
-import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 const CompanyProfilePage = () => {
   const { companyId } = useParams();
+  const { t } = useTranslation();
   const company = companies.find(u => u.id === parseInt(companyId));
 
   if (!company) {
@@ -43,7 +44,7 @@ const CompanyProfilePage = () => {
         {company.description}
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        <strong>Founded:</strong> {company.owner}
+        <strong>{t('companyProfilePage.founded')}</strong> {company.owner}
       </Typography>
     </Paper>
   );
