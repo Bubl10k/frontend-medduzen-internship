@@ -1,9 +1,11 @@
 import { Button, Container, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import DisplayText from "../components/DisplayText";
+import UpdateText from "../components/UpdateText";
 
 const StartPage = () => {
   const { t } = useTranslation();
-
+  
   return (
     <Container maxWidth="sm" sx={{ textAlign: 'center', marginTop: '2rem' }}>
       <Typography variant="h3" gutterBottom>
@@ -15,6 +17,8 @@ const StartPage = () => {
       <Button variant="contained" color="primary">
         {t('startPage.getStarted')}
       </Button>
+      <DisplayText />
+      <UpdateText />
     </Container>
   );
 };

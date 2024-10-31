@@ -28,6 +28,12 @@
       "title": "User List",
       "description": "This is the list of users on our platform.",
       "notFound": "User not found"
+    },
+    "companyProfilePage": {
+      "founded": "Founded"
+    },
+    "userProfilePage": {
+      "editProfile": "Edit Profile"
     }
 }
   

@@ -28,6 +28,12 @@
       "title": "Список користувачів",
       "description": "Це список користувачів на нашій платформі.",
       "notFound": "Користувача не знайдено"
+    },
+    "companyProfilePage": {
+      "founded": "Заснував"
+    },
+    "userProfilePage": {
+      "editProfile": "Редагувати профіль"
     }
   }
   

@@ -56,7 +56,7 @@ const ProfilePage = () => {
             </Grid>
             <Grid item>
               <Button variant="contained" color="primary">
-                Edit Profile
+                {t('userProfilePage.editProfile')}
               </Button>
             </Grid>
           </Grid>
