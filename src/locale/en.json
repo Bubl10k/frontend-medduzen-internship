@@ -1,0 +1,33 @@
+{
+    "startPage": {
+      "welcome": "Welcome to Quiz App",
+      "description": "This is the starting page of quiz application.",
+      "getStarted": "Get Started"
+    },
+    "header": {
+      "language": "Language",
+      "profile": "Profile",
+      "listUsers": "Users",
+      "companyList": "Companies",
+      "about": "About",
+      "logout": "Logout"
+    },
+    "modal": {
+      "close": "Close"
+    },
+    "aboutPage": {
+      "title": "About Our Platform",
+      "description": "Welcome to our platform! This application was developed to help people communicate with each other, open different companies and find profiles of users and organizations. Regardless of whether you are here to view profiles, browse companies or communicate with other users, we aim to provide a seamless and engaging experience."
+    },
+    "companyListPage": {
+      "title": "Company List",
+      "description": "This is the list of companies on our platform.",
+      "notFound": "Company not found"
+    },
+    "usersListPage": {
+      "title": "User List",
+      "description": "This is the list of users on our platform.",
+      "notFound": "User not found"
+    }
+}
+  
