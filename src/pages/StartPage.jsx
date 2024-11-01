@@ -10,10 +10,15 @@ const StartPage = () => {
   const [status, setStatus] = useState(null);
 
   const checkBackend = async () => {
-    const response = await healthCheck();
-    if (response.status_code === 200) {
-      setStatus(true);
-    } else {
+    try {
+      const response = await healthCheck();
+      if (response.status_code === 200) {
+        setStatus(true);
+      } else {
+        setStatus(false);
+      }
+    } catch (err) {
+      console.log('Error checking backend health:', err);
       setStatus(false);
     }
   };
@@ -35,7 +40,7 @@ const StartPage = () => {
       </Button>
       <DisplayText />
       <UpdateText />
-      {status === true && (
+      {status && (
         <Typography variant="body1" sx={{ marginTop: '2rem' }}>
           Backend is running
         </Typography>
