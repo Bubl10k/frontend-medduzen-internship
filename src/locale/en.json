@@ -34,6 +34,33 @@
     },
     "userProfilePage": {
       "editProfile": "Edit Profile"
-    }
+    },
+    "loginPage": {
+      "title": "Sign In",
+      "welcome":"Welcome, please sign in to continue",
+      "loginWithGitHub": "Login via GitHub",
+      "or": "or",
+      "username": "Username",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "signIn": "Sign in",
+      "registerPrompt": "Don`t have an account?",
+      "register": "Register"
+    },
+    "registrationPage": {
+    "title": "Register",
+    "subtitle": "Create your account",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "repeatPassword": "Repeat Password",
+    "register": "Register",
+    "loginViaGitHub": "Login via GitHub",
+    "or": "OR",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Login",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "generalError": "An unexpected error occurred. Please try again."
+  }
 }
   

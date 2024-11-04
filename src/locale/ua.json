@@ -34,6 +34,33 @@
     },
     "userProfilePage": {
       "editProfile": "Редагувати профіль"
+    },
+    "loginPage": {
+      "title": "Увійти",
+      "welcome":"Ласкаво просимо, будь ласка, увійдіть, щоб продовжити",
+      "loginWithGitHub": "Увійти через GitHub",
+      "or": "або",
+      "username": "Ім'я користувача",
+      "password": "Пароль",
+      "rememberMe": "Запам'ятати мене",
+      "signIn": "Увійти",
+      "registerPrompt": "Немає облікового запису?",
+      "register": "Зареєструватися"
+    },
+    "registrationPage": {
+      "title": "Реєстрація",
+      "subtitle": "Створіть свій обліковий запис",
+      "username": "Ім'я користувача",
+      "email": "Електронна пошта",
+      "password": "Пароль",
+      "repeatPassword": "Повторіть пароль",
+      "register": "Зареєструватися",
+      "loginViaGitHub": "Увійти через GitHub",
+      "or": "АБО",
+      "alreadyHaveAccount": "У вас вже є обліковий запис?",
+      "login": "Увійти",
+      "passwordsDoNotMatch": "Паролі не збігаються",
+      "generalError": "Виникла несподівана помилка. Спробуйте ще раз."
     }
-  }
+}
   

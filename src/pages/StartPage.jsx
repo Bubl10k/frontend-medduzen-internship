@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import DisplayText from '../components/DisplayText';
 import UpdateText from '../components/UpdateText';
 import { useEffect, useState } from 'react';
-import healthCheck from '../api/healthcheck.service';
+import healthCheck from '../services/healthcheck.service';
 
 const StartPage = () => {
   const { t } = useTranslation();
