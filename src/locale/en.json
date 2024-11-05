@@ -60,7 +60,8 @@
     "alreadyHaveAccount": "Already have an account?",
     "login": "Login",
     "passwordsDoNotMatch": "Passwords do not match",
-    "generalError": "An unexpected error occurred. Please try again."
+    "generalError": "An unexpected error occurred. Please try again.",
+    "invalidCredentials": "Invalid username or password."
   }
 }
   

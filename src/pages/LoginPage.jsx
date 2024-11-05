@@ -42,9 +42,9 @@ const LoginPage = () => {
       navigate('/');
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        setError('Invalid username or password.');
+        setError(t('loginPage.invalidCredentials'));
       } else {
-        setError('An unexpected error occurred. Please try again.');
+        setError(t('loginPage.generalError'));
       }
     }
   };

@@ -1,63 +1,68 @@
 import axiosInstance from '../utils/axiosInstance';
 import { store } from '../store/store';
 import { login, logout } from '../store/auth/auth.slice';
+import TokenService from './token.service';
 
-const LOGIN_URL = `/auth/jwt/create`;
+const LOGIN_URL = '/auth/jwt/create';
+const REFRESH_URL = '/auth/jwt/refresh/';
+const REGISTER_URL = 'api_users/users/';
+const GITHUB_LOGIN_URL = '/auth/social/login/github/';
 
 const AuthService = {
   async login(credentials) {
     try {
       const response = await axiosInstance.post(LOGIN_URL, credentials);
       const { refresh, access } = response.data;
-      localStorage.setItem('authTokens', JSON.stringify({ refresh, access }));
+      TokenService.setTokens({ refresh, access });
       store.dispatch(login({ refresh, access }));
       return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   },
 
   async logout() {
     store.dispatch(logout());
+    TokenService.removeTokens();
   },
 
   async updateToken() {
     const { auth } = store.getState();
-    const response = await axiosInstance.post(
-      '/auth/jwt/refresh/',
-      auth?.refresh,
-    );
-    if (response.status === 200) {
-      const { tokens } = response.data;
-      store.dispatch(login({ tokens }));
-      return tokens.access;
-    } else {
-      logout();
+    try {
+      const response = await axiosInstance.post(REFRESH_URL, {
+        refresh: auth?.refresh,
+      });
+      if (response.status === 200) {
+        const { tokens } = response.data;
+        store.dispatch(login({ tokens }));
+        return tokens.access;
+      } else {
+        this.logout();
+      }
+    } catch (err) {
+      console.error('Token refresh failed', err);
+      this.logout();
+      throw err;
     }
   },
 
   async register(credentials) {
     try {
-      const response = await axiosInstance.post(
-        'api_users/users/',
-        credentials,
-      );
+      const response = await axiosInstance.post(REGISTER_URL, credentials);
       return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   },
 
   async githubLogin() {
-    window.location.href = `${
-      import.meta.env.VITE_API_URL
-    }/auth/social/login/github/`;
+    window.location.href = import.meta.env.VITE_API_URL + GITHUB_LOGIN_URL;
   },
 
   handleGitHubCallback(authToken) {
-    localStorage.setItem('authTokens', JSON.stringify(authToken));
+    TokenService.setTokens(authToken);
     store.dispatch(login(authToken));
   },
 };
