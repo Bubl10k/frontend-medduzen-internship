@@ -35,6 +35,7 @@ const AuthService = {
       });
       if (response.status === 200) {
         const { tokens } = response.data;
+        TokenService.setTokens(tokens);
         store.dispatch(login({ tokens }));
         return tokens.access;
       } else {
