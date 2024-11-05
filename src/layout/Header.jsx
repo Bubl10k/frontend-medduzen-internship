@@ -10,13 +10,19 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
 import { FormControl, IconButton, Select } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import AuthService from '../services/auth.service';
+import { logout } from '../store/auth/auth.slice';
 
 export default function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { t, i18n } = useTranslation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language') || 'en';
@@ -40,6 +46,14 @@ export default function Header() {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    AuthService.logout();
+    dispatch(logout());
+    localStorage.removeItem('authTokens');
+    setAnchorElUser(null);
+    navigate('/login');
+  };
+
   const pages = [
     {
       name: t('header.listUsers'),
@@ -54,8 +68,6 @@ export default function Header() {
       link: '/about',
     },
   ];
-
-  const settings = [t('header.profile'), t('header.logout')];
 
   return (
     <AppBar position="static">
@@ -131,41 +143,52 @@ export default function Header() {
               onChange={e => handleChangeLanguage(e.target.value)}
               displayEmpty
               sx={{ color: 'white', borderColor: 'white' }}
+              value={i18n.language}
             >
               <MenuItem value="en">English</MenuItem>
               <MenuItem value="ua">Ukrainian</MenuItem>
             </Select>
           </FormControl>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map(setting => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            {isAuthenticated && (
+              <>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt="User Avatar"
+                      src="/static/images/avatar/2.jpg"
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem onClick={() => setAnchorElUser(null)}>
+                    <Typography sx={{ textAlign: 'center' }}>
+                      {t('header.profile')}
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <Typography sx={{ textAlign: 'center' }}>
+                      {t('header.logout')}
+                    </Typography>
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
           </Box>
         </Toolbar>
       </Container>
