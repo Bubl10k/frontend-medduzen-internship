@@ -1,11 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { login, logout, selectAuthToken } from '../store/auth/auth.slice';
+import { useDispatch } from 'react-redux';
+import { login, logout } from '../store/auth/auth.slice';
 import { useEffect } from 'react';
 import AuthService from '../services/auth.service';
+import TokenService from '../services/token.service';
 
 const useTokenRefresh = () => {
   const dispatch = useDispatch();
-  const tokens = useSelector(selectAuthToken);
+  const tokens = TokenService.getTokens();
 
   useEffect(() => {
     if (tokens) {

@@ -33,7 +33,15 @@
       "founded": "Founded"
     },
     "userProfilePage": {
-      "editProfile": "Edit Profile"
+      "editProfile": "Edit Profile",
+      "joined": "Joined:",
+      "save": "Save Changes",
+      "delete": "Delete Profile",
+      "deleteConfirm": "Are you sure you want to delete your profile?",
+      "upload": "Upload New Avatar",
+      "deleteProfile": "Delete Profile",
+      "deleteButton": "Delete",
+      "cancelButton": "Cancel"
     },
     "loginPage": {
       "title": "Sign In",

@@ -33,7 +33,15 @@
       "founded": "Заснував"
     },
     "userProfilePage": {
-      "editProfile": "Редагувати профіль"
+      "editProfile": "Редагувати профіль",
+      "joined": "Зареєстрований:",
+      "save": "Зберегти Зміни",
+      "delete": "Видалити профіль",
+      "deleteConfirm": "Ви впевнені, що хочете видалити свій профіль?",
+      "upload": "Завантажити новий аватар",
+      "deleteProfile": "Видалити профіль",
+      "deleteButton": "Видалити",
+      "cancelButton": "Скасувати"
     },
     "loginPage": {
       "title": "Увійти",
