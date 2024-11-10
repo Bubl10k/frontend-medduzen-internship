@@ -12,16 +12,16 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  deleteUser,
-  fetchUserById,
-  selectUserById,
-  updateUser,
-} from '../store/users/users.slice';
 import { useEffect, useState } from 'react';
 import useTokenRefresh from '../hooks/useTokenRefresh';
 import { currentUser } from '../store/auth/auth.slice';
 import UniversalModal from '../components/UniversalModal';
+import { selectUserById } from '../store/users/users.selectors';
+import {
+  deleteUser,
+  fetchUserById,
+  updateUser,
+} from '../store/users/users.actions';
 
 const ProfilePage = () => {
   useTokenRefresh();

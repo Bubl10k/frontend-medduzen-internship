@@ -2,16 +2,17 @@ import { Box, Container, Pagination, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { fetchUsers } from '../store/users/users.slice';
 import Loading from '../components/Loading';
-import useTokenRefresh from '../hooks/useTokenRefresh';
 import UserCard from '../components/UserCard';
+import { selectCount, selectLoading, selectUsers } from '../store/users/users.selectors';
+import { fetchUsers } from '../store/users/users.actions';
 
 const ListUsersPage = () => {
-  useTokenRefresh();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { users, loading, error, count } = useSelector((state) => state.users);
+  const users = useSelector(selectUsers);
+  const loading = useSelector(selectLoading);
+  const count = useSelector(selectCount);
   const [page, setPage] = useState(1);
   const usersPerPage = 5;
 

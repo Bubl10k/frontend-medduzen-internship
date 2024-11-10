@@ -15,7 +15,9 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthService from '../services/auth.service';
 import { logout } from '../store/auth/auth.slice';
-import { fetchUserById, selectUserById } from '../store/users/users.slice';
+import { fetchUserById } from '../store/users/users.actions';
+import { selectUserById } from '../store/users/users.selectors';
+
 
 export default function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);
