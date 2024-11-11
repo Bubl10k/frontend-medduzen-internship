@@ -3,9 +3,9 @@ import { store } from '../store/store';
 import { login, logout } from '../store/auth/auth.slice';
 import TokenService from './token.service';
 
-const LOGIN_URL = '/auth/jwt/create';
+const LOGIN_URL = '/auth/jwt/create/';
 const REFRESH_URL = '/auth/jwt/refresh/';
-const REGISTER_URL = 'api_users/users/';
+const REGISTER_URL = 'api/users/users/';
 const GITHUB_LOGIN_URL = '/auth/social/login/github/';
 
 const AuthService = {
@@ -28,13 +28,13 @@ const AuthService = {
   },
 
   async updateToken() {
-    const { auth } = store.getState();
     try {
+      const auth = TokenService.getTokens();
       const response = await axiosInstance.post(REFRESH_URL, {
         refresh: auth?.refresh,
       });
       if (response.status === 200) {
-        const { tokens } = response.data;
+        const tokens = { ...auth, access: response.data.access }
         TokenService.setTokens(tokens);
         store.dispatch(login({ tokens }));
         return tokens.access;

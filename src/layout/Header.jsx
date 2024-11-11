@@ -15,6 +15,9 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthService from '../services/auth.service';
 import { logout } from '../store/auth/auth.slice';
+import { fetchUserById } from '../store/users/users.actions';
+import { selectUserById } from '../store/users/users.selectors';
+
 
 export default function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -23,11 +26,14 @@ export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const currentUser = useSelector(state => state.auth.currentUserId);
+  const user = useSelector(selectUserById);
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language') || 'en';
-    i18n.changeLanguage(savedLanguage);
-  }, [i18n.language]);
+    if (currentUser) {
+      dispatch(fetchUserById(currentUser));
+    }
+  }, [dispatch, currentUser]);
 
   const handleChangeLanguage = lang => {
     i18n.changeLanguage(lang);
@@ -36,10 +42,6 @@ export default function Header() {
 
   const handleOpenUserMenu = event => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -55,18 +57,9 @@ export default function Header() {
   };
 
   const pages = [
-    {
-      name: t('header.listUsers'),
-      link: '/users',
-    },
-    {
-      name: t('header.companyList'),
-      link: '/companies',
-    },
-    {
-      name: t('header.about'),
-      link: '/about',
-    },
+    { name: t('header.listUsers'), link: '/users' },
+    { name: t('header.companyList'), link: '/companies' },
+    { name: t('header.about'), link: '/about' },
   ];
 
   return (
@@ -91,44 +84,12 @@ export default function Header() {
               Quiz App
             </Typography>
           </Link>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
-            >
-              {pages.map(page => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                  <Typography
-                    component={Link}
-                    to={page.link}
-                    sx={{ textAlign: 'center' }}
-                  >
-                    {page.name}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map(page => (
               <Button
                 component={Link}
                 to={page.link}
                 key={page.name}
-                onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page.name}
@@ -139,7 +100,6 @@ export default function Header() {
             sx={{ minWidth: 120, marginLeft: 'auto', marginRight: 2 }}
           >
             <Select
-              label="Language"
               onChange={e => handleChangeLanguage(e.target.value)}
               displayEmpty
               sx={{ color: 'white', borderColor: 'white' }}
@@ -150,13 +110,13 @@ export default function Header() {
             </Select>
           </FormControl>
           <Box sx={{ flexGrow: 0 }}>
-            {isAuthenticated && (
+            {isAuthenticated && user && (
               <>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
-                      alt="User Avatar"
-                      src="/static/images/avatar/2.jpg"
+                      alt={user.username}
+                      src={user.image_path || '/static/images/avatar/2.jpg'}
                     />
                   </IconButton>
                 </Tooltip>
@@ -164,21 +124,24 @@ export default function Header() {
                   sx={{ mt: '45px' }}
                   id="menu-appbar"
                   anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                   keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem onClick={() => setAnchorElUser(null)}>
-                    <Typography sx={{ textAlign: 'center' }}>
-                      {t('header.profile')}
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        color: 'inherit',
+                      }}
+                      variant="a"
+                      component={Link}
+                      to={`/users/${user.id}`}
+                    >
+                      Profile
                     </Typography>
                   </MenuItem>
                   <MenuItem onClick={handleLogout}>
