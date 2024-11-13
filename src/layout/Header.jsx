@@ -12,26 +12,29 @@ import { useEffect, useState } from 'react';
 import { FormControl, IconButton, Select } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import AuthService from '../services/auth.service';
 import { logout } from '../store/auth/auth.slice';
 import { fetchUserById } from '../store/users/users.actions';
-import { selectUserById } from '../store/users/users.selectors';
+import { useDispatch, useSelector } from 'react-redux';
 
-
-export default function Header() {
-  const [anchorElNav, setAnchorElNav] = useState(null);
+const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { t, i18n } = useTranslation();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
   const currentUser = useSelector(state => state.auth.currentUserId);
-  const user = useSelector(selectUserById);
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     if (currentUser) {
-      dispatch(fetchUserById(currentUser));
+      dispatch(fetchUserById(currentUser))
+        .then(action => {
+          if (action.payload) {
+            setUser(action.payload);
+          }
+        })
+        .catch(error => console.error("Error fetching user:", error));
     }
   }, [dispatch, currentUser]);
 
@@ -139,7 +142,7 @@ export default function Header() {
                       }}
                       variant="a"
                       component={Link}
-                      to={`/users/${user.id}`}
+                      to={`/users/${currentUser}`}
                     >
                       Profile
                     </Typography>
@@ -157,4 +160,6 @@ export default function Header() {
       </Container>
     </AppBar>
   );
-}
+};
+
+export default Header;

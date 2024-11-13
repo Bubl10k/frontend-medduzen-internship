@@ -5,6 +5,7 @@ import {
   Button,
   CardContent,
   Container,
+  Grid,
   Paper,
   TextField,
   Typography,
@@ -22,6 +23,8 @@ import {
   fetchUserById,
   updateUser,
 } from '../store/users/users.actions';
+import { fetchCompaniesByUserId } from '../store/companies/companies.actions';
+import CompanyCard from '../components/CompanyCard';
 
 const ProfilePage = () => {
   useTokenRefresh();
@@ -41,9 +44,11 @@ const ProfilePage = () => {
     image_path: user?.image_path,
   });
   const [open, setOpen] = useState(false);
+  const companies = useSelector(state => state.companies.companies);
 
   useEffect(() => {
     dispatch(fetchUserById(userId));
+    dispatch(fetchCompaniesByUserId(userId));
   }, [dispatch, userId]);
 
   useEffect(() => {
@@ -176,7 +181,10 @@ const ProfilePage = () => {
               </>
             ) : (
               <>
-                <Typography variant="h5" sx={{ mt: 1 }}>
+                <Typography
+                  variant="h5"
+                  sx={{ mt: 1, fontWeight: 'bold', mb: 1 }}
+                >
                   {user.username}
                 </Typography>
                 <Typography color="textSecondary" variant="h5">
@@ -225,6 +233,25 @@ const ProfilePage = () => {
             </Box>
           )}
         </CardContent>
+      </Paper>
+
+      <Paper elevation={3} sx={{ mt: 4, p: 3, borderRadius: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2 }}>
+          Companies Joined
+        </Typography>
+        <Grid container spacing={2}>
+          {companies && companies.length > 0 ? (
+            companies.map(company => (
+              <Grid item xs={12} sm={6} md={4} key={company.id}>
+                <CompanyCard company={company} isUser={currUser == userId} />
+              </Grid>
+            ))
+          ) : (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1, ml: 2 }}>
+              No companies yet
+            </Typography>
+          )}
+        </Grid>
       </Paper>
 
       <UniversalModal

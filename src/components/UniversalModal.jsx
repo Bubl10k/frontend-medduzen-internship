@@ -14,7 +14,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 600,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -35,7 +35,7 @@ const UniversalModal = ({ open, onClose, title, children, actions }) => {
           </DialogTitle>
         )}
 
-        <DialogContent dividers>{children}</DialogContent>
+        <DialogContent>{children}</DialogContent>
         <DialogActions>
           {actions ? (
             actions
