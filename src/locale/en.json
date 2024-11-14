@@ -22,15 +22,48 @@
     "companyListPage": {
       "title": "Company List",
       "description": "This is the list of companies on our platform.",
-      "notFound": "Company not found"
+      "notFound": "Company not found",
+      "create": "Create Your Own Company",
+      "companyDescription": "Description:",
+      "created": "Created at:",
+      "leaveConfirmation": "Are you sure you want to leave the company?",
+      "leave": "Confirm Leave",
+      "cancel": "Cancel",
+      "learnMore": "Learn More",
+      "leaveTitle": "Leave Company"
     },
     "usersListPage": {
       "title": "User List",
       "description": "This is the list of users on our platform.",
       "notFound": "User not found"
     },
+    "companyForm": {
+      "companyName": "Company Name",
+      "companyDescription": "Description",
+      "create": "Create Company",
+      "cancel": "Cancel",
+      "visibilityMode": "Visibility Mode",
+      "public": "Public",
+      "private": "Private",
+      "update": "Edit Company"
+    },
     "companyProfilePage": {
-      "founded": "Founded"
+      "founded": "Founded:",
+      "members": "Members",
+      "aboutUs": "About Us",
+      "viability": "Visibility",
+      "edit": "Edit",
+      "delete": "Delete",
+      "request": "Request to join",
+      "teamMembers": "Team Members",
+      "public": "Public",
+      "private": "Private",
+      "noMembers": "No members yet",
+      "titleDelete": "Delete Company",
+      "deleteConfirm": "Are you sure you want to delete this company? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirmDelete": "Confirm Delete",
+      "Edit Company": "Edit Company"
     },
     "userProfilePage": {
       "editProfile": "Edit Profile",

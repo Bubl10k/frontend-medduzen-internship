@@ -13,8 +13,10 @@ import Loading from '../components/Loading';
 import { currentUser } from '../store/auth/auth.slice';
 import UniversalModal from '../components/UniversalModal';
 import CompanyForm from '../components/CompanyForm';
+import { useTranslation } from 'react-i18next';
 
 const CompanyProfilePage = () => {
+  const { t } = useTranslation();
   const { companyId } = useParams();
   const dispatch = useDispatch();
   const company = useSelector(selectCompanyById);
@@ -65,7 +67,7 @@ const CompanyProfilePage = () => {
             {company.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {company.members.length} members
+            {company.members.length} {t('companyProfilePage.members')}
           </Typography>
         </Box>
       </Box>
@@ -73,7 +75,7 @@ const CompanyProfilePage = () => {
       <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between' }}>
         <Box>
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            About Us
+            {t('companyProfilePage.aboutUs')}
           </Typography>
           <Typography variant="body1" sx={{ mt: 1 }}>
             {company.description || 'No description available'}
@@ -86,14 +88,14 @@ const CompanyProfilePage = () => {
               sx={{ mr: 2 }}
               onClick={handleOpenEditModal}
             >
-              Edit
+              {t('companyProfilePage.edit')}
             </Button>
             <Button
               variant="contained"
               color="error"
               onClick={handleOpenDeleteModal}
             >
-              Delete
+              {t('companyProfilePage.delete')}
             </Button>
           </Box>
         )}
@@ -102,16 +104,16 @@ const CompanyProfilePage = () => {
       <Divider sx={{ mb: 3 }} />
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
         <Typography variant="body2" color="text.secondary">
-          Founded: {new Date(company.created_at).toLocaleDateString()}
+          {t('companyProfilePage.founded')} {new Date(company.created_at).toLocaleDateString()}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Visibility: {company.visible ? 'Public' : 'Private'}
+          {t('companyProfilePage.viability')} {company.visible ? 'Public' : 'Private'}
         </Typography>
       </Box>
 
       <Box sx={{ mb: 3 }}>
         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          Team Members
+          {t('companyProfilePage.teamMembers')}
         </Typography>
         {company.members.length > 0 ? (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
@@ -130,20 +132,20 @@ const CompanyProfilePage = () => {
           </Box>
         ) : (
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            No members yet
+            {t('companyProfilePage.noMembers')}
           </Typography>
         )}
       </Box>
 
       {company.members.includes(currUser) === false ? (
         <Button variant="contained" color="primary" fullWidth>
-          Request to Join
+          {t("companyProfilePage.request")}
         </Button>
       ) : null}
       <UniversalModal
         open={isEditModalOpen}
         onClose={handleCloseEditModal}
-        title="Edit Company"
+        title={t('companyForm.update')}
       >
         <CompanyForm
           onSubmit={handleEditCompany}
@@ -154,21 +156,20 @@ const CompanyProfilePage = () => {
       <UniversalModal
         open={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
-        title="Delete Company"
+        title={t('companyProfilePage.titleDelete')}
         actions={
           <>
             <Button onClick={handleCloseDeleteModal} color="primary">
-              Cancel
+              {t('companyProfilePage.cancel')}
             </Button>
             <Button onClick={handleDeleteCompany} color="error">
-              Confirm Delete
+              {t('companyProfilePage.confirmDelete')}
             </Button>
           </>
         }
       >
         <Typography>
-          Are you sure you want to delete this company? This action cannot be
-          undone.
+          {t('companyProfilePage.deleteConfirm')}
         </Typography>
       </UniversalModal>
     </Box>

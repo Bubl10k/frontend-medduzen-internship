@@ -22,7 +22,25 @@
     "companyListPage": {
       "title": "Список компаній",
       "description": "Це список компаній на нашій платформі.",
-      "notFound": "Компанію не знайдено"
+      "notFound": "Компанію не знайдено",
+      "create": "Створити свою власну компанію",
+      "companyDescription": "Опис:",
+      "created": "Створена в:",
+      "leaveConfirmation": "Ви впевнені, що хочете покинути компанію?",
+      "leave": "Покинути компанію",
+      "cancel": "Відмінити",
+      "learnMore": "Дізнатись більше",
+      "leaveTitle": "Покинути компанію"
+    },
+    "companyForm": {
+      "companyName": "Назва компанії",
+      "companyDescription": "Опис компанії",
+      "create": "Створити",
+      "cancel": "Відмінити",
+      "visibilityMode": "Видимість",
+      "public": "Для всіх",
+      "private": "Приватно",
+      "update": "Оновити компаній"
     },
     "usersListPage": {
       "title": "Список користувачів",
@@ -30,7 +48,21 @@
       "notFound": "Користувача не знайдено"
     },
     "companyProfilePage": {
-      "founded": "Заснував"
+      "founded": "Заснована:",
+      "members": "Члени",
+      "aboutUs": "Про нас",
+      "viability": "Видимість:",
+      "edit": "Змінити",
+      "delete": "Видалити",
+      "request": "Надіслати запит на приєднання",
+      "teamMembers": "Команда",
+      "public": "Для всіх",
+      "private": "Приватно",
+      "noMembers": "Немає членів поки що",
+      "titleDelete": "Видалити компанію",
+      "deleteConfirm": "Ви впевнені, що хочете видалити свою компанію? Ця дія не можна буде скасувати.",
+      "cancel": "Відмінити",
+      "confirmDelete": "Підтвердити видалення"
     },
     "userProfilePage": {
       "editProfile": "Редагувати профіль",

@@ -13,8 +13,10 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import UniversalModal from './UniversalModal';
 import CompanyService from '../services/company.service';
+import { useTranslation } from 'react-i18next';
 
 const CompanyCard = ({ company, isUser }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -69,9 +71,9 @@ const CompanyCard = ({ company, isUser }) => {
                   <MoreVertIcon />
                 </IconButton>
                 <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-                  <MenuItem onClick={handleCompanyPage}>Learn More</MenuItem>
+                  <MenuItem onClick={handleCompanyPage}>{t('companyListPage.learnMore')}</MenuItem>
                   <MenuItem onClick={handleLeaveCompany}>
-                    Leave Company
+                    {t('companyListPage.leave')}
                   </MenuItem>
                 </Menu>
               </>
@@ -81,7 +83,7 @@ const CompanyCard = ({ company, isUser }) => {
                 color={company.visible ? 'primary' : 'secondary'}
                 onClick={handleCompanyPage}
               >
-                Learn More
+                {t("companyListPage.learnMore")}
               </Button>
             )}
           </Box>
@@ -90,10 +92,10 @@ const CompanyCard = ({ company, isUser }) => {
             color="text.secondary"
             sx={{ marginBottom: 1 }}
           >
-            Description: {company.description}
+            {t('companyListPage.companyDescription')} {company.description}
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            Created at: {new Date(company.created_at).toLocaleDateString()}
+            {t('companyListPage.created')} {new Date(company.created_at).toLocaleDateString()}
           </Typography>
         </CardContent>
       </Card>
@@ -101,18 +103,18 @@ const CompanyCard = ({ company, isUser }) => {
       <UniversalModal
         open={modalOpen}
         onClose={handleCancelLeave}
-        title="Leave Company"
+        title={t('companyListPage.leaveTitle')}
         actions={
           <>
             <Button variant="contained" onClick={handleConfirmLeave}>
-              Confirm Leave
+              {t('companyListPage.leave')}
             </Button>
-            <Button onClick={handleCancelLeave}>Cancel</Button>
+            <Button onClick={handleCancelLeave}>{t('companyListPage.cancel')}</Button>
           </>
         }
       >
         <Typography variant="body1">
-          Are you sure you want to leave this company?
+          {t('companyListPage.leaveConfirmation')}
         </Typography>
       </UniversalModal>
     </>

@@ -52,7 +52,7 @@ const CompanyListPage = () => {
       </Typography>
       <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 3 }}>
         <Button variant="contained" color="primary" onClick={handleOpenModal}>
-          Create your own company
+          {t('companyListPage.create')}
         </Button>
       </Box>
       {companies.map(company => {
@@ -63,7 +63,7 @@ const CompanyListPage = () => {
       <UniversalModal
         open={isModalOpen}
         onClose={handleCloseModal}
-        title="Create Company"
+        title={t("companyForm.create")}
       >
         <CompanyForm
           onSubmit={handleCreateCompany}

@@ -9,8 +9,10 @@ import {
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { currentUser } from '../store/auth/auth.slice';
+import { useTranslation } from 'react-i18next';
 
 const CompanyForm = ({ onSubmit, company }) => {
+  const { t } = useTranslation();
   const currUser = useSelector(currentUser);
   const [formData, setFormData] = useState({
     name: company ? company.name : '',
@@ -38,7 +40,7 @@ const CompanyForm = ({ onSubmit, company }) => {
     <form onSubmit={handleSubmit}>
       <TextField
         name="name"
-        label="Company Name"
+        label={t("companyForm.companyName")}
         value={formData.name}
         onChange={handleChange}
         fullWidth
@@ -47,7 +49,7 @@ const CompanyForm = ({ onSubmit, company }) => {
       />
       <TextField
         name="description"
-        label="Description"
+        label={t("companyForm.companyDescription")}
         value={formData.description}
         onChange={handleChange}
         fullWidth
@@ -56,19 +58,19 @@ const CompanyForm = ({ onSubmit, company }) => {
         rows={4}
       />
       <FormControl fullWidth margin="normal">
-        <InputLabel>Visibility Mode</InputLabel>
+        <InputLabel>{t("companyForm.visibilityMode")}</InputLabel>
         <Select
           name="visible"
           value={formData.visible.toString()}
           onChange={handleChange}
           label="Visibility Mode"
         >
-          <MenuItem value="true">Public</MenuItem>
-          <MenuItem value="false">Private</MenuItem>
+          <MenuItem value="true">{t("companyForm.public")}</MenuItem>
+          <MenuItem value="false">{t("companyForm.private")}</MenuItem>
         </Select>
       </FormControl>
       <Button type="submit" variant="contained" color="primary" fullWidth>
-        {company ? 'Update Company' : 'Create Company'}
+        {company ? t("companyForm.update") : t("companyForm.create")}
       </Button>
     </form>
   );
