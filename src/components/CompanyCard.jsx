@@ -11,15 +11,13 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { leaveCompany } from '../store/companies/companies.actions';
 import UniversalModal from './UniversalModal';
+import CompanyService from '../services/company.service';
 
 const CompanyCard = ({ company, isUser }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const dispatch = useDispatch();
   const open = Boolean(anchorEl);
 
   const handleCompanyPage = () => {
@@ -28,7 +26,6 @@ const CompanyCard = ({ company, isUser }) => {
 
   const handleLeaveCompany = () => {
     setModalOpen(true);
-    dispatch(leaveCompany(company.id));
     handleMenuClose();
   };
 
@@ -41,7 +38,11 @@ const CompanyCard = ({ company, isUser }) => {
   };
 
   const handleConfirmLeave = () => {
-    console.log('User left the company');
+    try {
+      CompanyService.companyLeave(company.id);
+    } catch (err) {
+      console.error(err);
+    }
     setModalOpen(false);
   };
 

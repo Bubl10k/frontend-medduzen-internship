@@ -72,15 +72,3 @@ export const fetchCompaniesByUserId = createAsyncThunk(
     }
   },
 );
-
-export const leaveCompany = createAsyncThunk(
-  'companies/leaveCompany',
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await CompanyService.leaveCompany(id);
-      return response;
-    } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
-    }
-  },
-);

@@ -49,7 +49,7 @@ const ProfilePage = () => {
   useEffect(() => {
     dispatch(fetchUserById(userId));
     dispatch(fetchCompaniesByUserId(userId));
-  }, [dispatch, userId]);
+  }, [dispatch, userId, companies]);
 
   useEffect(() => {
     if (user) {
@@ -237,7 +237,7 @@ const ProfilePage = () => {
 
       <Paper elevation={3} sx={{ mt: 4, p: 3, borderRadius: 2 }}>
         <Typography variant="h5" sx={{ mb: 2 }}>
-          Companies Joined
+          Companies Joined:
         </Typography>
         <Grid container spacing={2}>
           {companies && companies.length > 0 ? (

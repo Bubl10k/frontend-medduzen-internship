@@ -16,6 +16,7 @@ import AuthService from '../services/auth.service';
 import { logout } from '../store/auth/auth.slice';
 import { fetchUserById } from '../store/users/users.actions';
 import { useDispatch, useSelector } from 'react-redux';
+import TokenService from '../services/token.service';
 
 const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -54,7 +55,7 @@ const Header = () => {
   const handleLogout = () => {
     AuthService.logout();
     dispatch(logout());
-    localStorage.removeItem('authTokens');
+    TokenService.removeTokens();
     setAnchorElUser(null);
     navigate('/login');
   };
@@ -113,7 +114,7 @@ const Header = () => {
             </Select>
           </FormControl>
           <Box sx={{ flexGrow: 0 }}>
-            {isAuthenticated && user && (
+            {isAuthenticated && user && currentUser && (
               <>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

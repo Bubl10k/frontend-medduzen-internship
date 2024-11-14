@@ -55,7 +55,7 @@ const CompanyListPage = () => {
           Create your own company
         </Button>
       </Box>
-      {companies.results.map(company => {
+      {companies.map(company => {
         return company.visible ? (
           <CompanyCard key={company.id} company={company} />
         ) : null;

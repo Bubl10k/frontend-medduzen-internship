@@ -1,5 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createCompany, deleteCompany, fetchCompanies, fetchCompaniesByUserId, fetchCompanyById, updateCompany } from './companies.actions';
+import {
+  createCompany,
+  deleteCompany,
+  fetchCompanies,
+  fetchCompaniesByUserId,
+  fetchCompanyById,
+  updateCompany,
+} from './companies.actions';
 
 const companiesSlice = createSlice({
   name: 'companies',
@@ -22,7 +29,7 @@ const companiesSlice = createSlice({
       })
       .addCase(fetchCompanies.fulfilled, (state, action) => {
         state.loading = false;
-        state.companies = action.payload;
+        state.companies = action.payload.results;
         state.count = action.payload.count;
         state.next = action.payload.next;
         state.previous = action.payload.previous;
