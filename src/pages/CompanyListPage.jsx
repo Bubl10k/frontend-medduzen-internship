@@ -10,15 +10,15 @@ import {
   createCompany,
   fetchCompanies,
 } from '../store/companies/companies.actions';
-import { selectCount } from '../store/companies/companies.selectors';
+import {
+  selectCompaniesState,
+} from '../store/companies/companies.selectors';
 
 const CompanyListPage = () => {
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const companies = useSelector(state => state.companies.companies);
-  const loading = useSelector(state => state.companies.loading);
+  const { loading, companies, count } = useSelector(selectCompaniesState);
   const dispatch = useDispatch();
-  const count = useSelector(selectCount);
   const [page, setPage] = useState(1);
   const companiesPerPage = 5;
 
@@ -26,13 +26,15 @@ const CompanyListPage = () => {
     dispatch(fetchCompanies(page));
   }, [dispatch, page]);
 
+  console.log(companies);
+
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
   const handlePageChange = (event, value) => {
     setPage(value);
   };
 
-  const handleCreateCompany = async (data) => {
+  const handleCreateCompany = async data => {
     await dispatch(createCompany(data));
     handleCloseModal();
   };
@@ -55,22 +57,24 @@ const CompanyListPage = () => {
           {t('companyListPage.create')}
         </Button>
       </Box>
-      {companies.map(company => {
-        return company.visible ? (
+      {companies
+        .filter(company => company.visible)
+        .map(company => (
           <CompanyCard key={company.id} company={company} />
-        ) : null;
-      })}
+        ))}
       <UniversalModal
         open={isModalOpen}
         onClose={handleCloseModal}
-        title={t("companyForm.create")}
+        title={t('companyForm.create')}
       >
         <CompanyForm
           onSubmit={handleCreateCompany}
           onClose={handleCloseModal}
         />
       </UniversalModal>
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}
+      >
         <Pagination
           count={Math.ceil(count / companiesPerPage)}
           page={page}

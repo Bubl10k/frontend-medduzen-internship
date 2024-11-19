@@ -17,27 +17,27 @@ import { logout } from '../store/auth/auth.slice';
 import { fetchUserById } from '../store/users/users.actions';
 import { useDispatch, useSelector } from 'react-redux';
 import TokenService from '../services/token.service';
+import {
+  selectCurrentUserId,
+  selectIsAuthenticated,
+} from '../store/auth/auth.selectors';
+import { selectUserById } from '../store/users/users.selectors';
+import ROUTES from '../utils/routes';
 
 const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const currentUser = useSelector(state => state.auth.currentUserId);
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  const [user, setUser] = useState(null);
+  const currentUser = useSelector(selectCurrentUserId);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector(state => selectUserById(state, currentUser));
 
   useEffect(() => {
-    if (currentUser) {
-      dispatch(fetchUserById(currentUser))
-        .then(action => {
-          if (action.payload) {
-            setUser(action.payload);
-          }
-        })
-        .catch(error => console.error("Error fetching user:", error));
+    if (currentUser && !user) {
+      dispatch(fetchUserById(currentUser));
     }
-  }, [dispatch, currentUser]);
+  }, [dispatch, currentUser, user]);
 
   const handleChangeLanguage = lang => {
     i18n.changeLanguage(lang);
@@ -57,13 +57,13 @@ const Header = () => {
     dispatch(logout());
     TokenService.removeTokens();
     setAnchorElUser(null);
-    navigate('/login');
+    navigate(ROUTES.LOGIN);
   };
 
   const pages = [
-    { name: t('header.listUsers'), link: '/users' },
-    { name: t('header.companyList'), link: '/companies' },
-    { name: t('header.about'), link: '/about' },
+    { name: t('header.listUsers'), link: ROUTES.USERS },
+    { name: t('header.companyList'), link: ROUTES.COMPANIES },
+    { name: t('header.about'), link: ROUTES.ABOUT },
   ];
 
   return (

@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import useTokenRefresh from '../hooks/useTokenRefresh';
 import { currentUser } from '../store/auth/auth.slice';
 import UniversalModal from '../components/UniversalModal';
-import { selectUserById } from '../store/users/users.selectors';
+import { selectUserState } from '../store/users/users.selectors';
 import {
   deleteUser,
   fetchUserById,
@@ -25,26 +25,26 @@ import {
 } from '../store/users/users.actions';
 import { fetchCompaniesByUserId } from '../store/companies/companies.actions';
 import CompanyCard from '../components/CompanyCard';
+import { selectCompaniesState } from '../store/companies/companies.selectors';
 
 const ProfilePage = () => {
   useTokenRefresh();
   const { userId } = useParams();
   const { t } = useTranslation();
-  const user = useSelector(selectUserById);
   const dispatch = useDispatch();
-  const error = useSelector(state => state.users.error);
+  const { error, selectedUser } = useSelector(selectUserState);
   const currUser = useSelector(currentUser);
   const [isEditMode, setIsEditMode] = useState(false);
   const [userData, setUserData] = useState({
-    id: user?.id,
-    username: user?.username,
-    first_name: user?.first_name,
-    last_name: user?.last_name,
-    email: user?.email,
-    image_path: user?.image_path,
+    id: selectedUser?.id,
+    username: selectedUser?.username,
+    first_name: selectedUser?.first_name,
+    last_name: selectedUser?.last_name,
+    email: selectedUser?.email,
+    image_path: selectedUser?.image_path,
   });
   const [open, setOpen] = useState(false);
-  const companies = useSelector(state => state.companies.companies);
+  const { companies } = useSelector(selectCompaniesState);
 
   useEffect(() => {
     dispatch(fetchUserById(userId));
@@ -52,17 +52,17 @@ const ProfilePage = () => {
   }, [dispatch, userId, companies]);
 
   useEffect(() => {
-    if (user) {
+    if (selectedUser) {
       setUserData({
-        id: user.id || '',
-        username: user.username || '',
-        first_name: user.first_name || '',
-        last_name: user.last_name || '',
-        email: user.email || '',
-        image_path: user.image_path || null,
+        id: selectedUser.id || '',
+        username: selectedUser.username || '',
+        first_name: selectedUser.first_name || '',
+        last_name: selectedUser.last_name || '',
+        email: selectedUser.email || '',
+        image_path: selectedUser.image_path || null,
       });
     }
-  }, [user]);
+  }, [selectedUser]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -83,11 +83,11 @@ const ProfilePage = () => {
   };
 
   const handleOpen = () => {
-    dispatch(deleteUser(user.id));
+    dispatch(deleteUser(selectedUser.id));
     setOpen(false);
   };
 
-  if (!user) {
+  if (!selectedUser) {
     return (
       <Container maxWidth="md" style={{ marginTop: '2rem' }}>
         <Typography variant="h5" color="error" sx={{ textAlign: 'center' }}>
@@ -109,8 +109,8 @@ const ProfilePage = () => {
           }}
         >
           <Avatar
-            src={user.image_path || '/path/to/default-avatar.jpg'}
-            alt={user.username}
+            src={selectedUser.image_path || '/path/to/default-avatar.jpg'}
+            alt={selectedUser.username}
             sx={{
               width: 100,
               height: 100,
@@ -185,18 +185,18 @@ const ProfilePage = () => {
                   variant="h5"
                   sx={{ mt: 1, fontWeight: 'bold', mb: 1 }}
                 >
-                  {user.username}
+                  {selectedUser.username}
                 </Typography>
                 <Typography color="textSecondary" variant="h5">
-                  {user.first_name ? user.first_name : '-'}{' '}
-                  {user.last_name ? user.last_name : '-'}
+                  {selectedUser.first_name ? selectedUser.first_name : '-'}{' '}
+                  {selectedUser.last_name ? selectedUser.last_name : '-'}
                 </Typography>
                 <Typography color="textSecondary" sx={{ mt: 1 }}>
-                  {user.email}
+                  {selectedUser.email}
                 </Typography>
                 <Typography color="textSecondary" sx={{ mt: 1 }}>
                   {t('userProfilePage.joined')}{' '}
-                  {new Date(user.created_at).toLocaleDateString()}
+                  {new Date(selectedUser.created_at).toLocaleDateString()}
                 </Typography>
               </>
             )}
@@ -243,7 +243,7 @@ const ProfilePage = () => {
           {companies && companies.length > 0 ? (
             companies.map(company => (
               <Grid item xs={12} sm={6} md={4} key={company.id}>
-                <CompanyCard company={company} isUser={currUser == userId} />
+                <CompanyCard company={company} isCompanyMember={currUser == userId} />
               </Grid>
             ))
           ) : (

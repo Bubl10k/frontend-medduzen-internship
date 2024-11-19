@@ -4,15 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Loading from '../components/Loading';
 import UserCard from '../components/UserCard';
-import { selectCount, selectLoading, selectUsers } from '../store/users/users.selectors';
+import { selectUserState } from '../store/users/users.selectors';
 import { fetchUsers } from '../store/users/users.actions';
 
 const ListUsersPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const users = useSelector(selectUsers);
-  const loading = useSelector(selectLoading);
-  const count = useSelector(selectCount);
+  const { loading, users, count } = useSelector(selectUserState);
   const [page, setPage] = useState(1);
   const usersPerPage = 5;
 

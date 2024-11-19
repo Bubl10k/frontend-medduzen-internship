@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { selectCompanyById } from '../store/companies/companies.selectors';
+import { selectCompaniesState, selectCompanyById } from '../store/companies/companies.selectors';
 import {
   deleteCompany,
   fetchCompanyById,
@@ -8,7 +8,6 @@ import {
 } from '../store/companies/companies.actions';
 import { useEffect, useState } from 'react';
 import { Avatar, Box, Button, Divider, Typography } from '@mui/material';
-import { selectLoading } from '../store/users/users.selectors';
 import Loading from '../components/Loading';
 import { currentUser } from '../store/auth/auth.slice';
 import UniversalModal from '../components/UniversalModal';
@@ -20,7 +19,7 @@ const CompanyProfilePage = () => {
   const { companyId } = useParams();
   const dispatch = useDispatch();
   const company = useSelector(selectCompanyById);
-  const loading = useSelector(selectLoading);
+  const { loading } = useSelector(selectCompaniesState);
   const currUser = useSelector(currentUser);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -137,11 +136,11 @@ const CompanyProfilePage = () => {
         )}
       </Box>
 
-      {company.members.includes(currUser) === false ? (
+      {!company.members.includes(currUser) && (
         <Button variant="contained" color="primary" fullWidth>
           {t("companyProfilePage.request")}
         </Button>
-      ) : null}
+      )}
       <UniversalModal
         open={isEditModalOpen}
         onClose={handleCloseEditModal}

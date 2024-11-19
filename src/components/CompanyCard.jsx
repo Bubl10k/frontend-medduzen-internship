@@ -14,8 +14,10 @@ import { useState } from 'react';
 import UniversalModal from './UniversalModal';
 import CompanyService from '../services/company.service';
 import { useTranslation } from 'react-i18next';
+import ROUTES from '../utils/routes';
+import { toast } from 'react-toastify';
 
-const CompanyCard = ({ company, isUser }) => {
+const CompanyCard = ({ company, isCompanyMember }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -23,7 +25,7 @@ const CompanyCard = ({ company, isUser }) => {
   const open = Boolean(anchorEl);
 
   const handleCompanyPage = () => {
-    navigate(`/companies/${company.id}`);
+    navigate(ROUTES.COMPANY_PROFILE(company.id));
   };
 
   const handleLeaveCompany = () => {
@@ -42,8 +44,9 @@ const CompanyCard = ({ company, isUser }) => {
   const handleConfirmLeave = () => {
     try {
       CompanyService.companyLeave(company.id);
+      toast.success('You have successfully left the company!');
     } catch (err) {
-      console.error(err);
+      toast.error('Failed to leave the company. Please try again.');
     }
     setModalOpen(false);
   };
@@ -60,7 +63,7 @@ const CompanyCard = ({ company, isUser }) => {
             <Typography variant="h6" component="div">
               {company.name}
             </Typography>
-            {isUser ? (
+            {isCompanyMember ? (
               <>
                 <IconButton
                   aria-label="more"
