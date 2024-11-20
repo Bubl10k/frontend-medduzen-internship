@@ -3,6 +3,10 @@ import { lazy, Suspense } from 'react';
 import Loading from './Loading';
 import PrivateRoute from '../utils/PrivateRoute';
 import ROUTES from '../utils/routes';
+import UserInvitationsPage from '../pages/UserInvitationsPage';
+import UserRequestsPage from '../pages/UserRequestsPage';
+import CompanyInvitationsPage from '../pages/CompanyInvitationsPage';
+import CompanyRequestsPage from '../pages/CompanyRequestsPage';
 
 const StartPage = lazy(() => import('../pages/StartPage'));
 const ProfilePage = lazy(() => import('../pages/ProfilePage'));
@@ -24,6 +28,10 @@ const AppRouter = () => {
         <Route path={ROUTES.COMPANIES} element={<PrivateRoute><CompanyListPage /></PrivateRoute>} />
         <Route path={ROUTES.USER_PROFILE(':userId')} element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
         <Route path={ROUTES.COMPANY_PROFILE(':companyId')} element={<PrivateRoute><CompanyProfilePage /></PrivateRoute>} />
+        <Route path={ROUTES.INVITATIONS_USER} element={<PrivateRoute><UserInvitationsPage /></PrivateRoute>} />
+        <Route path={ROUTES.REQUESTS_USER} element={<PrivateRoute><UserRequestsPage /></PrivateRoute>} />
+        <Route path={ROUTES.INVITATIONS_COMPANY} element={<PrivateRoute><CompanyInvitationsPage /></PrivateRoute>}/>
+        <Route path={ROUTES.REQUESTS_COMPANY(':companyId')} element={<PrivateRoute><CompanyRequestsPage /></PrivateRoute>} />
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegistrationPage />} />
         <Route path={ROUTES.GITHUB_CALLBACK} element={<GitHubCallback />} />

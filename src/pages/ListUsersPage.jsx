@@ -25,20 +25,24 @@ const ListUsersPage = () => {
   if (loading) {
     return <Loading />;
   }
-  
 
   return (
     <Container maxWidth="md" sx={{ marginTop: '2rem' }}>
       <Typography variant="h4" gutterBottom sx={{ textAlign: 'center' }}>
         {t('usersListPage.title')}
       </Typography>
-      <Typography variant="h6" sx={{ marginBottom: '2rem', textAlign: 'center' }}>
+      <Typography
+        variant="h6"
+        sx={{ marginBottom: '2rem', textAlign: 'center' }}
+      >
         {t('usersListPage.description')}
       </Typography>
-      {users.results.map((user) => (
+      {users.results.map(user => (
         <UserCard key={user.id} user={user} />
       ))}
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}
+      >
         <Pagination
           count={Math.ceil(count / usersPerPage)}
           page={page}

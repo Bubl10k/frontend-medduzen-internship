@@ -7,12 +7,49 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import CompanyService from '../services/company.service';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { currentUser } from '../store/auth/auth.slice';
+import UniversalModal from './UniversalModal';
 
 const UserCard = ({ user }) => {
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
+  const [companies, setCompanies] = useState([]);
+  const currUser = useSelector(currentUser);
 
   const handleViewProfile = () => {
     navigate(`/users/${user.id}`);
+  };
+
+  const handleOpenModal = async () => {
+    setOpenModal(true);
+    try {
+      const data = await CompanyService.getCompanies(1, currUser);
+      setCompanies(data.results || []);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleSentInvitation = async companyId => {
+    try {
+      await CompanyService.sendInvitation({
+        company: companyId,
+        receiver: user.id,
+        sender: currUser
+      });
+      toast.success('Invitation sent!');
+      setOpenModal(false);
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -33,7 +70,52 @@ const UserCard = ({ user }) => {
         <Button variant="outlined" onClick={handleViewProfile}>
           Learn More
         </Button>
+        <Button
+          variant="outlined"
+          sx={{ marginLeft: 2 }}
+          onClick={handleOpenModal}
+        >
+          Sent Invite
+        </Button>
       </Box>
+      <UniversalModal
+        open={openModal}
+        onClose={handleCloseModal}
+        title="Select a Company"
+        actions={
+          <Button onClick={handleCloseModal} color="primary">
+            Close
+          </Button>
+        }
+      >
+        {companies.length > 0 ? (
+          companies.map(company => (
+            <Box
+              key={company.id}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 2,
+                padding: 2,
+                border: '1px solid #ccc',
+                borderRadius: 1,
+              }}
+            >
+              <Typography>{company.name}</Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleSentInvitation(company.id)}
+              >
+                Invite
+              </Button>
+            </Box>
+          ))
+        ) : (
+          <Typography>No companies available</Typography>
+        )}
+      </UniversalModal>
     </Card>
   );
 };

@@ -1,0 +1,87 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import CompanyService from '../services/company.service';
+import { toast } from 'react-toastify';
+import { fetchCompanyById } from '../store/companies/companies.actions';
+import { Avatar, Box, Button, Menu, MenuItem, Typography } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { selectUser } from '../store/users/users.selectors';
+import { fetchUsers } from '../store/users/users.actions';
+
+const CompanyProfileUser = ({ userId, isOwner, companyId }) => {
+  const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const user = useSelector(state => selectUser(state, userId));
+
+  useEffect(() => {
+    if (!user) {
+      dispatch(fetchUsers());
+    }
+  }, [dispatch]);
+
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleRemoveMember = async () => {
+    try {
+      await CompanyService.companyRemoveMember(companyId, userId);
+      toast.success('User removed successfully!');
+      dispatch(fetchCompanyById(companyId));
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+    handleClose();
+  };
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        border: '1px solid #ccc',
+        padding: '8px',
+        borderRadius: '8px',
+        mb: 1,
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Avatar
+          src={user?.avatar || '/path/to/default/avatar.png'}
+          alt={`${user?.name} avatar`}
+          sx={{ width: 56, height: 56 }}
+        />
+        <Typography variant="body2">{user?.username}</Typography>
+      </Box>
+      {isOwner && (
+        <>
+          <Button
+            aria-controls={open ? 'user-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={handleClick}
+            sx={{ color: 'inherit', width: 32, height: 32 }}
+          >
+            <MoreVertIcon />
+          </Button>
+          <Menu
+            id="user-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleRemoveMember}>Remove User</MenuItem>
+          </Menu>
+        </>
+      )}
+    </Box>
+  );
+};
+
+export default CompanyProfileUser;

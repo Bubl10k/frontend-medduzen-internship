@@ -21,8 +21,8 @@ import {
   selectCurrentUserId,
   selectIsAuthenticated,
 } from '../store/auth/auth.selectors';
-import { selectUserById } from '../store/users/users.selectors';
 import ROUTES from '../utils/routes';
+import { toast } from 'react-toastify';
 
 const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -31,13 +31,20 @@ const Header = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUserId);
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const user = useSelector(state => selectUserById(state, currentUser));
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (currentUser && !user) {
+    if (currentUser) {
       dispatch(fetchUserById(currentUser));
+      dispatch(fetchUserById(currentUser))
+        .then(action => {
+          if (action.payload) {
+            setUser(action.payload);
+             }
+        })
+        .catch(error => toast.error(error));
     }
-  }, [dispatch, currentUser, user]);
+  }, [dispatch, currentUser]);
 
   const handleChangeLanguage = lang => {
     i18n.changeLanguage(lang);
@@ -146,6 +153,34 @@ const Header = () => {
                       to={`/users/${currentUser}`}
                     >
                       Profile
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem>
+                    <Typography 
+                      sx={{ 
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        color: 'inherit',
+                      }}
+                      variant="a"
+                      component={Link}
+                      to={ROUTES.INVITATIONS_USER}
+                      >
+                      Invitations
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem>
+                    <Typography 
+                      sx={{ 
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        color: 'inherit',
+                      }}
+                      variant="a"
+                      component={Link}
+                      to={ROUTES.REQUESTS_USER}
+                      >
+                      Requests
                     </Typography>
                   </MenuItem>
                   <MenuItem onClick={handleLogout}>

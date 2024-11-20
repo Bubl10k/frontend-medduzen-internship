@@ -1,18 +1,25 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { selectCompaniesState, selectCompanyById } from '../store/companies/companies.selectors';
+import { Link, useParams } from 'react-router-dom';
+import {
+  selectCompaniesState,
+  selectCompanyById,
+} from '../store/companies/companies.selectors';
 import {
   deleteCompany,
   fetchCompanyById,
   updateCompany,
 } from '../store/companies/companies.actions';
 import { useEffect, useState } from 'react';
-import { Avatar, Box, Button, Divider, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 import Loading from '../components/Loading';
 import { currentUser } from '../store/auth/auth.slice';
 import UniversalModal from '../components/UniversalModal';
 import CompanyForm from '../components/CompanyForm';
 import { useTranslation } from 'react-i18next';
+import ROUTES from '../utils/routes';
+import CompanyService from '../services/company.service';
+import { toast } from 'react-toastify';
+import CompanyProfileUser from '../components/CompanyProfileUser';
 
 const CompanyProfilePage = () => {
   const { t } = useTranslation();
@@ -23,6 +30,7 @@ const CompanyProfilePage = () => {
   const currUser = useSelector(currentUser);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  
 
   useEffect(() => {
     dispatch(fetchCompanyById(companyId));
@@ -42,6 +50,25 @@ const CompanyProfilePage = () => {
   const handleEditCompany = updatedData => {
     dispatch(updateCompany({ id: companyId, ...updatedData }));
     handleCloseEditModal();
+  };
+
+  const handleSendRequest = async () => {
+    try {
+      await CompanyService.sendRequest({ company: companyId });
+      toast.success('Request sent!');
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+  };
+
+  const handleLeaveCompany = async () => {
+    try {
+      await CompanyService.companyLeave(companyId);
+      toast.success('You left the company!');
+      dispatch(fetchCompanyById(companyId));
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
   };
 
   if (loading || !company) {
@@ -98,15 +125,27 @@ const CompanyProfilePage = () => {
             </Button>
           </Box>
         )}
+
+        {company.members.includes(currUser) && currUser !== company.owner && (
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleLeaveCompany}
+          >
+            Leave Company
+          </Button>
+        )}
       </Box>
 
       <Divider sx={{ mb: 3 }} />
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
         <Typography variant="body2" color="text.secondary">
-          {t('companyProfilePage.founded')} {new Date(company.created_at).toLocaleDateString()}
+          {t('companyProfilePage.founded')}{' '}
+          {new Date(company.created_at).toLocaleDateString()}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {t('companyProfilePage.viability')} {company.visible ? 'Public' : 'Private'}
+          {t('companyProfilePage.viability')}{' '}
+          {company.visible ? 'Public' : 'Private'}
         </Typography>
       </Box>
 
@@ -116,17 +155,13 @@ const CompanyProfilePage = () => {
         </Typography>
         {company.members.length > 0 ? (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
-            {company.members.map((member, index) => (
-              <Box key={index} sx={{ textAlign: 'center' }}>
-                <Avatar
-                  src="/path/to/member/avatar.png"
-                  alt={`${member.name} avatar`}
-                  sx={{ width: 56, height: 56 }}
-                />
-                <Typography variant="body2" sx={{ mt: 1 }}>
-                  {member.name}
-                </Typography>
-              </Box>
+            {company.members.map((member) => (
+              <CompanyProfileUser
+                key={member}
+                userId={member}
+                isOwner={currUser === company.owner}
+                companyId={company.id}
+              />
             ))}
           </Box>
         ) : (
@@ -137,9 +172,54 @@ const CompanyProfilePage = () => {
       </Box>
 
       {!company.members.includes(currUser) && (
-        <Button variant="contained" color="primary" fullWidth>
-          {t("companyProfilePage.request")}
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleSendRequest}
+        >
+          {t('companyProfilePage.request')}
         </Button>
+      )}
+      {currUser === company.owner && (
+        <>
+          <Button variant="contained" color="primary" fullWidth>
+            <Link
+              to={ROUTES.USERS}
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+              }}
+            >
+              Invite new user
+            </Link>
+          </Button>
+          <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            <Link
+              to={ROUTES.INVITATIONS_COMPANY}
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+              }}
+            >
+              See company invitations
+            </Link>
+          </Button>
+          <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            <Link
+              to={ROUTES.REQUESTS_COMPANY(company.id)}
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+              }}
+            >
+              See company requests
+            </Link>
+          </Button>
+        </>
       )}
       <UniversalModal
         open={isEditModalOpen}
@@ -167,9 +247,7 @@ const CompanyProfilePage = () => {
           </>
         }
       >
-        <Typography>
-          {t('companyProfilePage.deleteConfirm')}
-        </Typography>
+        <Typography>{t('companyProfilePage.deleteConfirm')}</Typography>
       </UniversalModal>
     </Box>
   );
