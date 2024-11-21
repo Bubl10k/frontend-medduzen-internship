@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
-  createCompany,
-  deleteCompany,
   fetchCompanies,
-  fetchCompaniesByUserId,
   fetchCompanyById,
+  createCompany,
   updateCompany,
-} from './companies.actions';
+  deleteCompany,
+  fetchCompaniesByUserId,
+} from './companies.actions'; 
 
 const companiesSlice = createSlice({
   name: 'companies',
@@ -97,7 +97,7 @@ const companiesSlice = createSlice({
       .addCase(fetchCompaniesByUserId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
   },
 });
 

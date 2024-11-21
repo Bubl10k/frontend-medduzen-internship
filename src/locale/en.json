@@ -103,6 +103,26 @@
     "passwordsDoNotMatch": "Passwords do not match",
     "generalError": "An unexpected error occurred. Please try again.",
     "invalidCredentials": "Invalid username or password."
+  },
+  "requests": {
+    "status": "Status",
+    "sent": "Sent at:",
+    "cancel": "Cancel",
+    "sender": "Sender",
+    "accept": "Accept",
+    "reject": "Reject",
+    "requests": "Your Requests",
+    "nofound": "No requests found."
+  },
+  "invitations": {
+    "company": "Company",
+    "status": "Status",
+    "sent": "Sent at:",
+    "cancel": "Cancel",
+    "accept": "Accept",
+    "decline": "Decline",
+    "receiver": "Receiver",
+    "revoke": "Revoke"
   }
 }
   

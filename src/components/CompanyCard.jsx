@@ -46,7 +46,7 @@ const CompanyCard = ({ company, isCompanyMember }) => {
       CompanyService.companyLeave(company.id);
       toast.success('You have successfully left the company!');
     } catch (err) {
-      toast.error('Failed to leave the company. Please try again.');
+      toast.error(err.response?.data.detail || err.message);
     }
     setModalOpen(false);
   };
@@ -74,7 +74,9 @@ const CompanyCard = ({ company, isCompanyMember }) => {
                   <MoreVertIcon />
                 </IconButton>
                 <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-                  <MenuItem onClick={handleCompanyPage}>{t('companyListPage.learnMore')}</MenuItem>
+                  <MenuItem onClick={handleCompanyPage}>
+                    {t('companyListPage.learnMore')}
+                  </MenuItem>
                   <MenuItem onClick={handleLeaveCompany}>
                     {t('companyListPage.leave')}
                   </MenuItem>
@@ -86,7 +88,7 @@ const CompanyCard = ({ company, isCompanyMember }) => {
                 color={company.visible ? 'primary' : 'secondary'}
                 onClick={handleCompanyPage}
               >
-                {t("companyListPage.learnMore")}
+                {t('companyListPage.learnMore')}
               </Button>
             )}
           </Box>
@@ -98,7 +100,8 @@ const CompanyCard = ({ company, isCompanyMember }) => {
             {t('companyListPage.companyDescription')} {company.description}
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            {t('companyListPage.created')} {new Date(company.created_at).toLocaleDateString()}
+            {t('companyListPage.created')}{' '}
+            {new Date(company.created_at).toLocaleDateString()}
           </Typography>
         </CardContent>
       </Card>
@@ -112,7 +115,9 @@ const CompanyCard = ({ company, isCompanyMember }) => {
             <Button variant="contained" onClick={handleConfirmLeave}>
               {t('companyListPage.leave')}
             </Button>
-            <Button onClick={handleCancelLeave}>{t('companyListPage.cancel')}</Button>
+            <Button onClick={handleCancelLeave}>
+              {t('companyListPage.cancel')}
+            </Button>
           </>
         }
       >

@@ -26,8 +26,6 @@ const CompanyListPage = () => {
     dispatch(fetchCompanies(page));
   }, [dispatch, page]);
 
-  console.log(companies);
-
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
   const handlePageChange = (event, value) => {
