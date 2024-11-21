@@ -66,16 +66,7 @@ const CompanyRequestCard = ({ request }) => {
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {t('requests.status')}{' '}
-          {currentRequest.status === 'P'
-            ? 'Pending'
-            : currentRequest.status === 'R'
-            ? 'Rejected'
-            : currentRequest.status === 'A'
-            ? 'Accepted'
-            : currentRequest.status === 'C'
-            ? 'Canceled'
-            : currentRequest.status
-            }
+          {currentRequest.status_display}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {t('requests.sent')} {new Date(currentRequest.created_at).toLocaleString()}

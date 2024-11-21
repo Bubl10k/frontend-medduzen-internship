@@ -8,7 +8,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { selectUser } from '../store/users/users.selectors';
 import { fetchUsers } from '../store/users/users.actions';
 
-const CompanyProfileUser = ({ userId, isOwner, companyId }) => {
+const CompanyProfileUser = ({ userId, isOwner, isAdmin, companyId }) => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -37,6 +37,32 @@ const CompanyProfileUser = ({ userId, isOwner, companyId }) => {
       toast.error(err.response?.data.detail || err.message);
     }
     handleClose();
+  };
+
+  const handleAppointAdmin = async () => {
+    try {
+      await CompanyService.appointAdmin({
+        company_id: companyId,
+        user_id: userId,
+      });
+      toast.success('User appointed as admin successfully!');
+      dispatch(fetchCompanyById(companyId));
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+  };
+
+  const handleRemoveAdmin = async () => {
+    try {
+      await CompanyService.removeAdmin({
+        company_id: companyId,
+        user_id: userId,
+      });
+      toast.success('User removed as admin successfully!');
+      dispatch(fetchCompanyById(companyId));
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
   };
 
   return (
@@ -77,6 +103,11 @@ const CompanyProfileUser = ({ userId, isOwner, companyId }) => {
             onClose={handleClose}
           >
             <MenuItem onClick={handleRemoveMember}>Remove User</MenuItem>
+            {isAdmin ? (
+              <MenuItem onClick={handleRemoveAdmin}>Remove Admin</MenuItem>
+            ) : (
+              <MenuItem onClick={handleAppointAdmin}>Appoint Admin</MenuItem>
+            )}
           </Menu>
         </>
       )}

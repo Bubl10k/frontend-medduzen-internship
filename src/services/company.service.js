@@ -19,7 +19,6 @@ const CompanyService = {
 
   async getCompanies(page = 1, owner_id = null) {
     try {
-      console.log('owner', owner_id);
       const response = await axiosInstance.get(COMPANY_ULR, {
         params: { page, owner_id },
       });
@@ -226,6 +225,36 @@ const CompanyService = {
       return response.data;
     } catch (error) {
       console.error('Error rejecting request:', error);
+      throw error;
+    }
+  },
+
+  async appointAdmin(data) {
+    try {
+      const response = await axiosInstance.patch(
+        `${COMPANY_ULR}${data.company_id}/appoint_admin/`,
+        {
+          user: data.user_id,
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error appointing admin:', error);
+      throw error;
+    }
+  },
+
+  async removeAdmin(data) {
+    try {
+      const response = await axiosInstance.patch(
+        `${COMPANY_ULR}${data.company_id}/remove_admin/`,
+        {
+          user: data.user_id,
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error removing admin:', error);
       throw error;
     }
   },

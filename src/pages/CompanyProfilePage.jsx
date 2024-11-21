@@ -30,7 +30,6 @@ const CompanyProfilePage = () => {
   const currUser = useSelector(currentUser);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  
 
   useEffect(() => {
     dispatch(fetchCompanyById(companyId));
@@ -153,20 +152,49 @@ const CompanyProfilePage = () => {
         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
           {t('companyProfilePage.teamMembers')}
         </Typography>
-        {company.members.length > 0 ? (
+        {(() => {
+          const nonAdminMembers = company.members.filter(
+            member => !company.admins.includes(member),
+          );
+
+          return nonAdminMembers.length > 0 ? (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
+              {nonAdminMembers.map(member => (
+                <CompanyProfileUser
+                  key={member}
+                  userId={member}
+                  isOwner={currUser === company.owner}
+                  companyId={company.id}
+                />
+              ))}
+            </Box>
+          ) : (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              {t('companyProfilePage.noMembers')}
+            </Typography>
+          );
+        })()}
+      </Box>
+
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          {t('companyProfilePage.admins')}
+        </Typography>
+        {company.admins.length > 0 ? (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
-            {company.members.map((member) => (
+            {company.admins.map(admin => (
               <CompanyProfileUser
-                key={member}
-                userId={member}
+                key={admin}
+                userId={admin}
                 isOwner={currUser === company.owner}
+                isAdmin={true}
                 companyId={company.id}
               />
             ))}
           </Box>
         ) : (
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            {t('companyProfilePage.noMembers')}
+            {t('companyProfilePage.noAdmins')}
           </Typography>
         )}
       </Box>
