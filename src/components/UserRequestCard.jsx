@@ -24,15 +24,11 @@ const UserRequestCard = ({ request }) => {
     <Card sx={{ mb: 2 }}>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          {t('requests.status')}{' '}
-          {currentRequest.status === 'P'
-            ? 'Pending'
-            : currentRequest.status === 'C'
-            ? 'Canceled'
-            : currentRequest.status}
+          {t('requests.status')} {currentRequest.satus_display}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {t('requests.sent')} {new Date(currentRequest.created_at).toLocaleString()}
+          {t('requests.sent')}{' '}
+          {new Date(currentRequest.created_at).toLocaleString()}
         </Typography>
         <Button
           variant="contained"

@@ -52,15 +52,11 @@ const CompanyInvitationCard = ({ invitation }) => {
           </Link>
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {t('invitations.status')}{' '}
-          {currentInvitation.status === 'P'
-            ? 'Pending'
-            : currentInvitation.status === 'R'
-            ? 'Revoked'
-            : currentInvitation.status}
+          {t('invitations.status')} {currentInvitation.status_display}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {t('invitations.sent')} {new Date(currentInvitation.created_at).toLocaleString()}
+          {t('invitations.sent')}{' '}
+          {new Date(currentInvitation.created_at).toLocaleString()}
         </Typography>
         <Button
           variant="contained"

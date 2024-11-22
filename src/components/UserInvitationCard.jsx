@@ -1,12 +1,13 @@
 import { Button, Card, CardContent, Typography } from '@mui/material';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useState } from 'react';
 import CompanyService from '../services/company.service';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import ROUTES from '../utils/routes';
+import { useTranslation } from 'react-i18next';
 
 const UserInvitationCard = ({ invitation }) => {
-  const { t } = useTransition();
+  const { t } = useTranslation();
   const [currentInvitation, setCurrentInvitation] = useState(invitation);
   const [company, setCompany] = useState({});
 
@@ -64,15 +65,11 @@ const UserInvitationCard = ({ invitation }) => {
           </Link>
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {t('invitations.status')}{' '}
-          {currentInvitation.status === 'P'
-            ? 'Pending'
-            : currentInvitation.status === 'A'
-            ? 'Accepted'
-            : 'Declined'}
+          {t('invitations.status')} {currentInvitation.status_display}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {t('invitations.sent')} {new Date(currentInvitation.created_at).toLocaleString()}
+          {t('invitations.sent')}{' '}
+          {new Date(currentInvitation.created_at).toLocaleString()}
         </Typography>
         <Button
           variant="contained"

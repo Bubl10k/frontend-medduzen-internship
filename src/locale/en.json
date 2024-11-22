@@ -63,7 +63,9 @@
       "deleteConfirm": "Are you sure you want to delete this company? This action cannot be undone.",
       "cancel": "Cancel",
       "confirmDelete": "Confirm Delete",
-      "Edit Company": "Edit Company"
+      "Edit Company": "Edit Company",
+      "admins": "Team Admins",
+      "noAdmins": "No admins yet"
     },
     "userProfilePage": {
       "editProfile": "Edit Profile",
