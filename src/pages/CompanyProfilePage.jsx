@@ -9,7 +9,7 @@ import {
   fetchCompanyById,
   updateCompany,
 } from '../store/companies/companies.actions';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Box, Button, Divider, Typography } from '@mui/material';
 import Loading from '../components/Loading';
 import { currentUser } from '../store/auth/auth.slice';
@@ -69,6 +69,37 @@ const CompanyProfilePage = () => {
       toast.error(err.response?.data.detail || err.message);
     }
   };
+
+  const NonAdminMembers = useCallback(() => {
+    if (!company) {
+      return <Loading />;
+    }
+
+    const members = company.members.filter(
+      member => !company.admins.includes(member),
+    );
+
+    if (members.length > 0) {
+      return (
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
+          {members.map(member => (
+            <CompanyProfileUser
+              key={member}
+              userId={member}
+              isOwner={currUser === company.owner}
+              companyId={company.id}
+            />
+          ))}
+        </Box>
+      );
+    }
+
+    return (
+      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        {t('companyProfilePage.noMembers')}
+      </Typography>
+    );
+  }, [company, currUser]);
 
   if (loading || !company) {
     return <Loading />;
@@ -152,28 +183,7 @@ const CompanyProfilePage = () => {
         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
           {t('companyProfilePage.teamMembers')}
         </Typography>
-        {(() => {
-          const nonAdminMembers = company.members.filter(
-            member => !company.admins.includes(member),
-          );
-
-          return nonAdminMembers.length > 0 ? (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
-              {nonAdminMembers.map(member => (
-                <CompanyProfileUser
-                  key={member}
-                  userId={member}
-                  isOwner={currUser === company.owner}
-                  companyId={company.id}
-                />
-              ))}
-            </Box>
-          ) : (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              {t('companyProfilePage.noMembers')}
-            </Typography>
-          );
-        })()}
+        {NonAdminMembers()}
       </Box>
 
       <Box sx={{ mb: 3 }}>
