@@ -14,7 +14,7 @@ const UserRequestsPage = () => {
 
   const fetchUserRequests = async () => {
     try {
-      const data = await CompanyService.getRequests(currUser);
+      const data = await CompanyService.getRequestsUser(currUser);
       setUserRequests(data);
     } catch (err) {
       toast.error(err.response?.data.detail || err.message);

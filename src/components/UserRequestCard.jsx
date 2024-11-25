@@ -1,12 +1,13 @@
 import { toast } from 'react-toastify';
 import CompanyService from '../services/company.service';
 import { Button, Card, CardContent, Typography } from '@mui/material';
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const UserRequestCard = ({ request }) => {
-  const { t } = useTransition();
+  const { t } = useTranslation();
   const [currentRequest, setCurrentRequest] = useState(request);
-
+  
   const cancelRequest = async requestId => {
     try {
       const response = await CompanyService.cancelRequest(requestId);
@@ -24,7 +25,7 @@ const UserRequestCard = ({ request }) => {
     <Card sx={{ mb: 2 }}>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          {t('requests.status')} {currentRequest.satus_display}
+          {t('requests.status')} {currentRequest.status_display}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {t('requests.sent')}{' '}

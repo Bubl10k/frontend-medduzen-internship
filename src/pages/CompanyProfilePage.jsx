@@ -20,6 +20,8 @@ import ROUTES from '../utils/routes';
 import CompanyService from '../services/company.service';
 import { toast } from 'react-toastify';
 import CompanyProfileUser from '../components/CompanyProfileUser';
+import QuizService from '../services/quiz.service';
+import QuizCreationForm from '../components/QuizCreationForm';
 
 const CompanyProfilePage = () => {
   const { t } = useTranslation();
@@ -28,12 +30,49 @@ const CompanyProfilePage = () => {
   const company = useSelector(selectCompanyById);
   const { loading } = useSelector(selectCompaniesState);
   const currUser = useSelector(currentUser);
+  const [quizData, setQuizData] = useState({
+    title: '',
+    frequency: 0,
+    questions: [],
+  });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCompanyById(companyId));
   }, [dispatch, companyId]);
+
+  const NonAdminMembers = useCallback(() => {
+    if (!company) {
+      return <Loading />;
+    }
+
+    const members = company.members.filter(
+      member => !company.admins.includes(member),
+    );
+
+    if (members.length > 0) {
+      return (
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
+          {members.map(member => (
+            <CompanyProfileUser
+              key={member}
+              userId={member}
+              isOwner={currUser === company.owner}
+              companyId={company.id}
+            />
+          ))}
+        </Box>
+      );
+    }
+
+    return (
+      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        {t('companyProfilePage.noMembers')}
+      </Typography>
+    );
+  }, [company, currUser]);
 
   const handleOpenEditModal = () => setIsEditModalOpen(true);
   const handleCloseEditModal = () => setIsEditModalOpen(false);
@@ -70,36 +109,17 @@ const CompanyProfilePage = () => {
     }
   };
 
-  const NonAdminMembers = useCallback(() => {
-    if (!company) {
-      return <Loading />;
+  const handleCreateQuiz = async () => {
+    try {
+      quizData.company = company.id;
+      await QuizService.createQuiz(quizData);
+      toast.success('Quiz created successfully!');
+      setIsQuizModalOpen(false);
+    } catch (err) {
+      console.error(err.response);
+      toast.error(err.response?.data.detail || err.message);
     }
-
-    const members = company.members.filter(
-      member => !company.admins.includes(member),
-    );
-
-    if (members.length > 0) {
-      return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
-          {members.map(member => (
-            <CompanyProfileUser
-              key={member}
-              userId={member}
-              isOwner={currUser === company.owner}
-              companyId={company.id}
-            />
-          ))}
-        </Box>
-      );
-    }
-
-    return (
-      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-        {t('companyProfilePage.noMembers')}
-      </Typography>
-    );
-  }, [company, currUser]);
+  };
 
   if (loading || !company) {
     return <Loading />;
@@ -219,6 +239,31 @@ const CompanyProfilePage = () => {
           {t('companyProfilePage.request')}
         </Button>
       )}
+      {currUser === company.owner || company.admins.includes(currUser) ? (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={() => setIsQuizModalOpen(true)}
+            sx={{ mb: 2, mt: 2 }}
+          >
+            Create Quiz
+          </Button>
+          <Button variant="contained" color="primary" fullWidth sx={{ mb: 2 }}>
+            <Link
+              to={ROUTES.QUIZZES(company.id)}
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+              }}
+            >
+              Quizzes List
+            </Link>
+          </Button>
+        </>
+      ) : null}
       {currUser === company.owner && (
         <>
           <Button variant="contained" color="primary" fullWidth>
@@ -286,6 +331,17 @@ const CompanyProfilePage = () => {
         }
       >
         <Typography>{t('companyProfilePage.deleteConfirm')}</Typography>
+      </UniversalModal>
+      <UniversalModal
+        open={isQuizModalOpen}
+        onClose={() => setIsQuizModalOpen(false)}
+        title="Create a New Quiz"
+      >
+        <QuizCreationForm
+          quizData={quizData}
+          setQuizData={setQuizData}
+          onSubmit={handleCreateQuiz}
+        />
       </UniversalModal>
     </Box>
   );
