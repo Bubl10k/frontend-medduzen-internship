@@ -171,7 +171,7 @@ const CompanyService = {
     }
   },
 
-  async getRequests(senderId, companyId) {
+  async getRequestsCompany(senderId, companyId) {
     try {
       const response = await axiosInstance.get(`${OWNER_REQUEST_URL}`, {
         params: { sender: senderId, company: companyId },
@@ -179,6 +179,18 @@ const CompanyService = {
       return response.data;
     } catch (error) {
       console.error('Error fetching requests:', error);
+      throw error;
+    }
+  },
+
+  async getRequestsUser(senderId) {
+    try {
+      const response = await axiosInstance.get(`${USERS_REQUEST_URL}`, {
+        params: { sender: senderId },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching request user:', error);
       throw error;
     }
   },

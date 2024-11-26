@@ -3,10 +3,6 @@ import { lazy, Suspense } from 'react';
 import Loading from './Loading';
 import PrivateRoute from '../utils/PrivateRoute';
 import ROUTES from '../utils/routes';
-import UserInvitationsPage from '../pages/UserInvitationsPage';
-import UserRequestsPage from '../pages/UserRequestsPage';
-import CompanyInvitationsPage from '../pages/CompanyInvitationsPage';
-import CompanyRequestsPage from '../pages/CompanyRequestsPage';
 
 const StartPage = lazy(() => import('../pages/StartPage'));
 const ProfilePage = lazy(() => import('../pages/ProfilePage'));
@@ -16,6 +12,11 @@ const CompanyProfilePage = lazy(() => import('../pages/CompanyProfilePage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const RegistrationPage = lazy(() => import('../pages/RegistrationPage'));
+const UserRequestsPage = lazy(() => import('../pages/UserRequestsPage'));
+const UserInvitationsPage = lazy(() => import('../pages/UserInvitationsPage'));
+const CompanyRequestsPage = lazy(() => import('../pages/CompanyRequestsPage'));
+const CompanyInvitationsPage = lazy(() => import('../pages/CompanyInvitationsPage'));
+const QuizListPage = lazy(() => import('../pages/QuizListPage'));
 const GitHubCallback = lazy(() => import('../utils/GitHubCallback'));
 
 const AppRouter = () => {
@@ -32,6 +33,7 @@ const AppRouter = () => {
         <Route path={ROUTES.REQUESTS_USER} element={<PrivateRoute><UserRequestsPage /></PrivateRoute>} />
         <Route path={ROUTES.INVITATIONS_COMPANY} element={<PrivateRoute><CompanyInvitationsPage /></PrivateRoute>}/>
         <Route path={ROUTES.REQUESTS_COMPANY(':companyId')} element={<PrivateRoute><CompanyRequestsPage /></PrivateRoute>} />
+        <Route path={ROUTES.QUIZZES(':companyId')} element={<PrivateRoute><QuizListPage /></PrivateRoute>}/>
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegistrationPage />} />
         <Route path={ROUTES.GITHUB_CALLBACK} element={<GitHubCallback />} />

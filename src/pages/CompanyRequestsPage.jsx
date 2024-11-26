@@ -11,7 +11,7 @@ const CompanyRequestsPage = () => {
 
   const fetchRequests = async () => {
     try {
-      const data = await CompanyService.getRequests(null, companyId);
+      const data = await CompanyService.getRequestsCompany(null, companyId);
       setRequests(data);
     } catch (err) {
       toast.error(err.response?.data.detail || err.message);

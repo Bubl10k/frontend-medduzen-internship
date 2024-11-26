@@ -12,6 +12,7 @@ const ROUTES = {
     REQUESTS_USER: '/user-requests',
     INVITATIONS_COMPANY: '/company-invitations',
     REQUESTS_COMPANY: (companyId) => `/company-requests/${companyId}`,
+    QUIZZES: (companyId) => `/quizzes/${companyId}`,
   };
   
   export default ROUTES;

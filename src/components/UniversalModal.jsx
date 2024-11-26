@@ -19,6 +19,8 @@ const style = {
   boxShadow: 24,
   p: 4,
   borderRadius: 2,
+  overflow: 'auto',
+  maxHeight: '90vh'
 };
 
 const UniversalModal = ({ open, onClose, title, children, actions }) => {
