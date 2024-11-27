@@ -1,16 +1,26 @@
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from '../utils/axiosInstance';
 
 const QUIZ_URL = 'api/quiz/quizzes/';
 
 const QuizService = {
-  async getQuizzes(companyId) {
+  async getQuizzes(companyId, page = 1) {
     try {
       const response = await axiosInstance.get(`${QUIZ_URL}`, {
-        params: { company: companyId },
+        params: { company: companyId, page },
       });
       return response.data;
     } catch (error) {
       console.error('Error fetching quizzes:', error);
+      throw error;
+    }
+  },
+
+  async getQuizzById(quizId) {
+    try {
+      const response = await axiosInstance.get(`${QUIZ_URL}${quizId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching quiz:', error);
       throw error;
     }
   },
@@ -41,6 +51,31 @@ const QuizService = {
       return response.data;
     } catch (error) {
       console.error('Error deleting quiz:', error);
+      throw error;
+    }
+  },
+
+  async startQuiz(quizId) {
+    try {
+      const response = await axiosInstance.post(
+        `${QUIZ_URL}${quizId}/start_quiz/`,
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error starting quiz:', error);
+      throw error;
+    }
+  },
+
+  async completeQuiz(quizId, data) {
+    try {
+      const response = await axiosInstance.post(
+        `${QUIZ_URL}${quizId}/complete_quiz/`,
+        data,
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error completing quiz:', error);
       throw error;
     }
   },

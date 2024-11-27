@@ -1,51 +1,44 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import QuizService from '../services/quiz.service';
-import { toast } from 'react-toastify';
 import Loading from '../components/Loading';
-import { Box, Typography } from '@mui/material';
+import { Box, Pagination, Typography } from '@mui/material';
 import QuizCard from '../components/QuizCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { currentUser } from '../store/auth/auth.slice';
 import { selectCompanyById } from '../store/companies/companies.selectors';
 import { fetchCompanyById } from '../store/companies/companies.actions';
+import { useTranslation } from 'react-i18next';
+import { selectQuizzesState } from '../store/quizzes/quizzes.selectors';
+import { fetchQuizzes } from '../store/quizzes/quizzes.actions';
+
 const QuizListPage = () => {
+  const { t } = useTranslation();
   const { companyId } = useParams();
   const currUser = useSelector(currentUser);
-  const [quizzes, setQuizzes] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { quizzes, count, loading } = useSelector(selectQuizzesState);
+  const [page, setPage] = useState(1);
   const company = useSelector(selectCompanyById);
   const dispatch = useDispatch();
-
-  const fetchQuizzes = async companyId => {
-    try {
-      const quizzes = await QuizService.getQuizzes(companyId);
-      setQuizzes(quizzes);
-      setLoading(false);
-    } catch (err) {
-      toast.error(err.response?.data.detail || err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const quizzesPerPage = 10;
 
   useEffect(() => {
     dispatch(fetchCompanyById(companyId));
-  }, [dispatch, companyId]);
+    dispatch(fetchQuizzes(companyId, page));
+  }, [dispatch, companyId, page]);
 
-  useEffect(() => {
-    fetchQuizzes(companyId);
-  }, [companyId]);
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
 
-  if (loading) return <Loading />;
+  if (loading || !company) return <Loading />;
 
   return (
     <Box sx={{ maxWidth: 800, margin: '0 auto', mt: 6 }}>
       <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', mb: 4 }}>
-        Quizzes for {company.name}
+        {t('quizzes.quizzesFor')} {company.name}
       </Typography>
       {quizzes.length === 0 && (
-        <Typography>No quizzes found for this company.</Typography>
+        <Typography>{t('quizzes.noQuizzes')}</Typography>
       )}
 
       {!loading && quizzes.length > 0 && (
@@ -54,12 +47,26 @@ const QuizListPage = () => {
             <QuizCard
               key={quiz.id}
               quiz={quiz}
-              onQuizUpdate={() => fetchQuizzes(companyId)}
+              onQuizUpdate={() => fetchQuizzes(companyId, page)}
               isOwnerOrAdmin={
-                currUser == company.owner || company.admins.includes(currUser)
+                currUser === company.owner || company.admins.includes(currUser)
               }
             />
           ))}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '2rem',
+            }}
+          >
+            <Pagination
+              count={Math.ceil(count / quizzesPerPage)}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+            />
+          </Box>
         </>
       )}
     </Box>

@@ -1,34 +1,72 @@
-import { Box, Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+} from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
-const QuizCreationForm = ({ quizData, setQuizData, onSubmit }) => {
-  const addQuestion = () => {
-    setQuizData(prev => ({
-      ...prev,
-      questions: [...prev.questions, { text: '', answers: [] }],
+const QuizCreationForm = ({ quiz, setQuiz, onSubmit }) => {
+  const { t } = useTranslation();
+
+  const appendQuestion = () => {
+    setQuiz(prevState => ({
+      ...prevState,
+      questions: [...prevState.questions, { text: '', answers: [] }],
+    }));
+  }
+
+  const removeQuestion = questionIndex => {
+    const newQuestions = [...quiz.questions];
+    newQuestions.splice(questionIndex, 1);
+    setQuiz({ ...quiz, questions: newQuestions });
+    toast.success(t('quizzes.quizzRemove'));
+  };
+
+  const appendAnswerToQuestion = (targetIndex) => {
+    setQuiz((prevState) => ({
+      ...prevState,
+      questions: prevState.questions.map((question, index) => 
+        index === targetIndex 
+          ? { 
+              ...question, 
+              answers: [...question.answers, { text: '', is_correct: false }] 
+            } 
+          : question
+      ),
     }));
   };
 
-  const addAnswer = questionIndex => {
-    const newQuestions = [...quizData.questions];
-    newQuestions[questionIndex].answers.push({ text: '', is_correct: false });
-    setQuizData({ ...quizData, questions: newQuestions });
+  const updateQuestion = (questionIndex, field, value) => {
+    setQuiz((prevState) => ({
+      ...prevState,
+      questions: prevState.questions.map((question, index) =>
+        index === questionIndex ? { ...question, [field]: value } : question
+      ),
+    }));
   };
 
-  const handleInputChange = (value, field, questionIndex, answerIndex) => {
-    const newQuestions = [...quizData.questions];
-    if (field === 'questionText') {
-      newQuestions[questionIndex].text = value;
-    } else if (field === 'answerText') {
-      newQuestions[questionIndex].answers[answerIndex].text = value;
-    } else if (field === 'isCorrect') {
-      newQuestions[questionIndex].answers[answerIndex].is_correct = value;
-    }
-    setQuizData({ ...quizData, questions: newQuestions });
+  const updateAnswer = (questionIndex, answerIndex, field, value) => {
+    setQuiz((prevState) => ({
+      ...prevState,
+      questions: prevState.questions.map((question, index) =>
+        index === questionIndex
+          ? {
+              ...question,
+              answers: question.answers.map((answer, j) =>
+                j === answerIndex ? { ...answer, [field]: value } : answer
+              ),
+            }
+          : question
+      ),
+    }));
   };
 
   const handleQuizSubmit = () => {
     if (onSubmit) {
-      onSubmit(quizData);
+      onSubmit(quiz);
     }
   };
 
@@ -36,25 +74,30 @@ const QuizCreationForm = ({ quizData, setQuizData, onSubmit }) => {
     <Box>
       <TextField
         label="Quiz Title"
-        value={quizData.title}
-        onChange={e => setQuizData({ ...quizData, title: e.target.value })}
+        value={quiz.title}
+        onChange={e => setQuiz({ ...quiz, title: e.target.value })}
         fullWidth
         sx={{ mb: 2 }}
       />
       <TextField
         label="Quiz Description"
-        value={quizData.description}
-        onChange={e => setQuizData({ ...quizData, description: e.target.value })}
+        value={quiz.description}
+        onChange={e =>
+          setQuiz({ ...quiz, description: e.target.value })
+        }
         fullWidth
         sx={{ mb: 2 }}
       />
-      {quizData.questions.map((question, questionIndex) => (
-        <Box key={questionIndex} sx={{ mb: 3, p: 2, border: '1px solid #ddd' }}>
+      {quiz.questions.map((question, questionIndex) => (
+        <Box
+          key={questionIndex}
+          sx={{ mb: 3, p: 2, border: '1px solid #ddd', position: 'relative' }}
+        >
           <TextField
             label={`Question ${questionIndex + 1}`}
             value={question.text}
             onChange={e =>
-              handleInputChange(e.target.value, 'questionText', questionIndex)
+              updateQuestion(questionIndex, 'text', e.target.value)
             }
             fullWidth
             sx={{ mb: 2 }}
@@ -68,11 +111,11 @@ const QuizCreationForm = ({ quizData, setQuizData, onSubmit }) => {
                 label={`Answer ${answerIndex + 1}`}
                 value={answer.text}
                 onChange={e =>
-                  handleInputChange(
-                    e.target.value,
-                    'answerText',
+                  updateAnswer(
                     questionIndex,
                     answerIndex,
+                    'text',
+                    e.target.value
                   )
                 }
                 fullWidth
@@ -83,11 +126,11 @@ const QuizCreationForm = ({ quizData, setQuizData, onSubmit }) => {
                   <Checkbox
                     checked={answer.is_correct}
                     onChange={() =>
-                      handleInputChange(
-                        !answer.is_correct,
-                        'isCorrect',
+                      updateAnswer(
                         questionIndex,
                         answerIndex,
+                        'is_correct',
+                        !answer.is_correct,
                       )
                     }
                   />
@@ -96,20 +139,25 @@ const QuizCreationForm = ({ quizData, setQuizData, onSubmit }) => {
               />
             </Box>
           ))}
-          <Button
-            variant="outlined"
-            onClick={() => addAnswer(questionIndex)}
-            sx={{ mt: 1 }}
-          >
-            Add Answer
-          </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+            <Button variant="outlined" onClick={() => appendAnswerToQuestion(questionIndex)}>
+              {t('quizzes.addAnswer')}
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => removeQuestion(questionIndex)}
+            >
+              {t('quizzes.deleteQuestion')}
+            </Button>
+          </Box>
         </Box>
       ))}
-      <Button variant="contained" onClick={addQuestion} sx={{ mr: 2 }}>
-        Add Question
+      <Button variant="contained" onClick={appendQuestion} sx={{ mr: 2 }}>
+        {t('quizzes.addQuestion')}
       </Button>
       <Button variant="contained" color="primary" onClick={handleQuizSubmit}>
-        Submit Quiz
+        {t('quizzes.submitQuiz')}
       </Button>
     </Box>
   );

@@ -4,8 +4,10 @@ import { toast } from 'react-toastify';
 import { Box, List, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import CompanyRequestCard from '../components/CompanyRequestCard';
+import { useTranslation } from 'react-i18next';
 
 const CompanyRequestsPage = () => {
+  const { t } = useTranslation();
   const companyId = useParams();
   const [requests, setRequests] = useState([]);
 
@@ -26,7 +28,7 @@ const CompanyRequestsPage = () => {
   return (
     <Box sx={{ maxWidth: 600, margin: '0 auto', mt: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Company Requests
+        {t('requests.companyTitle')}
       </Typography>
       {requests.length > 0 ? (
         <List>
@@ -35,7 +37,7 @@ const CompanyRequestsPage = () => {
           ))}
         </List>
       ) : (
-        <Typography variant="body1">No Requests found.</Typography>
+        <Typography variant="body1">{t('requests.nofound')}</Typography>
       )}
     </Box>
   );

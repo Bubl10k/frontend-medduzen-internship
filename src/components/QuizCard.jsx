@@ -1,19 +1,22 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import QuizService from '../services/quiz.service';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import UniversalModal from './UniversalModal';
+import QuizCreationForm from './QuizCreationForm';
+import { useNavigate } from 'react-router-dom';
+import ROUTES from '../utils/routes';
+import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { deleteQuiz, editQuiz } from '../store/quizzes/quizzes.actions';
 
-const QuizCard = ({ quiz, onQuizUpdate, isOwnerOrAdmin }) => {
+const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
+  const { t } = useTranslation();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [quizData, setQuizData] = useState({
-    title: quiz.title,
-    company: quiz.company,
-    description: quiz.description,
-    frequency: quiz.frequency,
-    questions: quiz.questions,
-  });
+  const [quizData, setQuizData] = useState({ ...quiz });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleOpenDeleteModal = () => setOpenDeleteModal(true);
   const handleCloseDeleteModal = () => setOpenDeleteModal(false);
@@ -21,28 +24,22 @@ const QuizCard = ({ quiz, onQuizUpdate, isOwnerOrAdmin }) => {
   const handleOpenEditModal = () => setOpenEditModal(true);
   const handleEditModalClose = () => setOpenEditModal(false);
 
-  const handleInputChange = e => {
-    const { name, value } = e.target;
-    setQuizData(prevData => ({ ...prevData, [name]: value }));
+  const handleEditQuiz = id => {
+    dispatch(editQuiz({ id, quizData })).then(response => {
+      if (!response.error) {
+        setOpenEditModal(false);
+      }
+    });
   };
 
-  const editQuiz = async id => {
-    try {
-      await QuizService.updateQuiz(id, quizData);
-      toast.success('Quiz updated successfully!');
-      handleEditModalClose();
-      onQuizUpdate();
-    } catch (err) {
-      toast.error(err.response?.data.detail || err.message);
-    }
+  const handleDeleteQuiz = id => {
+    dispatch(deleteQuiz(id));
   };
 
-  const deleteQuiz = async id => {
+  const startQuiz = async id => {
     try {
-      await QuizService.deleteQuiz(id);
-      toast.success('Quiz deleted successfully!');
-      handleCloseDeleteModal();
-      onQuizUpdate();
+      await QuizService.startQuiz(id);
+      navigate(ROUTES.QUIZ(id));
     } catch (err) {
       toast.error(err.response?.data.detail || err.message);
     }
@@ -63,68 +60,54 @@ const QuizCard = ({ quiz, onQuizUpdate, isOwnerOrAdmin }) => {
       <Box>
         <Typography variant="h6">{quiz.title}</Typography>
         <Typography variant="body2" color="text.secondary">
-          {quiz.description || 'No description available'}
+          {quiz.description || t('quizzes.description')}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Created at: {new Date(quiz.created_at).toLocaleString()}
+          {t('quizzes.created')} {new Date(quiz.created_at).toLocaleString()}
         </Typography>
       </Box>
-      {isOwnerOrAdmin && (
-        <Box sx={{ display: 'flex', gap: '8px' }}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleOpenEditModal}
-          >
-            Edit Quiz
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => handleOpenDeleteModal()}
-          >
-            Delete Quiz
-          </Button>
-        </Box>
-      )}
+      <Box sx={{ display: 'flex', gap: '8px' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => startQuiz(quiz.id)}
+        >
+          {t('quizzes.startQuiz')}
+        </Button>
+        {isOwnerOrAdmin && (
+          <>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleOpenEditModal}
+            >
+              {t('quizzes.editQuiz')}
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => handleOpenDeleteModal()}
+            >
+              {t('quizzes.deleteQuiz')}
+            </Button>
+          </>
+        )}
+      </Box>
       <UniversalModal
         open={openEditModal}
         onClose={handleEditModalClose}
         title="Edit Quiz"
         actions={
-          <>
-            <Button onClick={handleEditModalClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={() => editQuiz(quiz.id)} color="primary">
-              Save Changes
-            </Button>
-          </>
+          <Button onClick={handleEditModalClose} color="primary">
+            {t('quizzes.cancel')}
+          </Button>
         }
       >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-            padding: '16px',
-          }}
-        >
-          <TextField
-            label="Quiz Title"
-            name="title"
-            value={quizData.title}
-            onChange={handleInputChange}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Quiz Desciption"
-            name="description"
-            value={quizData.description}
-            onChange={handleInputChange}
-            sx={{ mb: 2 }}
-          />
-        </Box>
+        <QuizCreationForm
+          quiz={quizData}
+          setQuiz={setQuizData}
+          onSubmit={() => handleEditQuiz(quiz.id)}
+        />
       </UniversalModal>
       <UniversalModal
         open={openDeleteModal}
@@ -133,15 +116,15 @@ const QuizCard = ({ quiz, onQuizUpdate, isOwnerOrAdmin }) => {
         actions={
           <>
             <Button onClick={() => setOpenDeleteModal(false)} color="primary">
-              Cancel
+              {t('quizzes.cancel')}
             </Button>
-            <Button onClick={() => deleteQuiz(quiz.id)} color="error">
-              Delete quiz
+            <Button onClick={() => handleDeleteQuiz(quiz.id)} color="error">
+              {t('quizzes.deleteQuiz')}
             </Button>
           </>
         }
       >
-        <Typography>Are you sure you want to delete this quiz?</Typography>
+        <Typography>{t('quizzes.deleteConfirm')}</Typography>
       </UniversalModal>
     </Box>
   );
