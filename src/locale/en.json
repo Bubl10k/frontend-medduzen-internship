@@ -65,7 +65,10 @@
       "confirmDelete": "Confirm Delete",
       "Edit Company": "Edit Company",
       "admins": "Team Admins",
-      "noAdmins": "No admins yet"
+      "noAdmins": "No admins yet",
+      "userRemove": "Remove User",
+      "adminRemove": "Remove Admin",
+      "appointAdmin": "Appoint Admin"
     },
     "userProfilePage": {
       "editProfile": "Edit Profile",
@@ -114,7 +117,8 @@
     "accept": "Accept",
     "reject": "Reject",
     "requests": "Your Requests",
-    "nofound": "No requests found."
+    "nofound": "No requests found.",
+    "companyTitle": "Company Requests"
   },
   "invitations": {
     "company": "Company",
@@ -124,7 +128,28 @@
     "accept": "Accept",
     "decline": "Decline",
     "receiver": "Receiver",
-    "revoke": "Revoke"
+    "revoke": "Revoke",
+    "userTitle": "User Invitations",
+    "companyTitle": "Company Invitations",
+    "nofound": "No invitations found."
+  },
+  "quizzes": {
+    "quizzesFor": "Quizzes for",
+    "noQuizzes": "No quizzes found for this company.",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "created": "Created at:",
+    "description": "No description available",
+    "startQuiz": "Start Quiz",
+    "editQuiz": "Edit Quiz",
+    "deleteQuiz": "Delete Quiz",
+    "save": "Save Changes",
+    "deleteConfirm":"Are you sure you want to delete this quiz?",
+    "addAnswer": "Add Answer",
+    "deleteQuestion": "Delete Question",
+    "addQuestion": "Add Question",
+    "submitQuiz": "Submit Quiz",
+    "quizzRemove": "Question removed successfully!"
   }
 }
   

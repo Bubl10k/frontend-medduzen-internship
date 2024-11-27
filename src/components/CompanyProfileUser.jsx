@@ -7,8 +7,10 @@ import { Avatar, Box, Button, Menu, MenuItem, Typography } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { selectUser } from '../store/users/users.selectors';
 import { fetchUsers } from '../store/users/users.actions';
+import { useTranslation } from 'react-i18next';
 
 const CompanyProfileUser = ({ userId, isOwner, isAdmin, companyId }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -102,11 +104,11 @@ const CompanyProfileUser = ({ userId, isOwner, isAdmin, companyId }) => {
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleRemoveMember}>Remove User</MenuItem>
+            <MenuItem onClick={handleRemoveMember}>{t('companyProfilePage.userRemove')}</MenuItem>
             {isAdmin ? (
-              <MenuItem onClick={handleRemoveAdmin}>Remove Admin</MenuItem>
+              <MenuItem onClick={handleRemoveAdmin}>{t('companyProfilePage.adminRemove')}</MenuItem>
             ) : (
-              <MenuItem onClick={handleAppointAdmin}>Appoint Admin</MenuItem>
+              <MenuItem onClick={handleAppointAdmin}>{t('companyProfilePage.adminAppoint')}</MenuItem>
             )}
           </Menu>
         </>

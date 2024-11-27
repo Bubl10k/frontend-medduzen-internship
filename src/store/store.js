@@ -3,6 +3,7 @@ import textReducer from './text/text.slice.js';
 import authReducer from './auth/auth.slice.js';
 import userReducer from './users/users.slice.js';
 import companiesReducer from './companies/companies.slice.js';
+import quizzesReducer from './quizzes/quizzes.slice.js';
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
     auth: authReducer,
     users: userReducer,
     companies: companiesReducer,
+    quizzes: quizzesReducer,
   },
 });
