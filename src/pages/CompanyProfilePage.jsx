@@ -20,8 +20,8 @@ import ROUTES from '../utils/routes';
 import CompanyService from '../services/company.service';
 import { toast } from 'react-toastify';
 import CompanyProfileUser from '../components/CompanyProfileUser';
-import QuizService from '../services/quiz.service';
 import QuizCreationForm from '../components/QuizCreationForm';
+import { createQuiz } from '../store/quizzes/quizzes.actions';
 
 const CompanyProfilePage = () => {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ const CompanyProfilePage = () => {
   const company = useSelector(selectCompanyById);
   const { loading } = useSelector(selectCompaniesState);
   const currUser = useSelector(currentUser);
-  const [quizData, setQuizData] = useState({
+  const [quiz, setQuiz] = useState({
     title: '',
     frequency: 0,
     questions: [],
@@ -110,15 +110,7 @@ const CompanyProfilePage = () => {
   };
 
   const handleCreateQuiz = async () => {
-    try {
-      quizData.company = company.id;
-      await QuizService.createQuiz(quizData);
-      toast.success('Quiz created successfully!');
-      setIsQuizModalOpen(false);
-    } catch (err) {
-      console.error(err.response);
-      toast.error(err.response?.data.detail || err.message);
-    }
+    dispatch(createQuiz(quiz));
   };
 
   if (loading || !company) {
@@ -338,8 +330,8 @@ const CompanyProfilePage = () => {
         title="Create a New Quiz"
       >
         <QuizCreationForm
-          quizData={quizData}
-          setQuizData={setQuizData}
+          quiz={quiz}
+          setQuiz={setQuiz}
           onSubmit={handleCreateQuiz}
         />
       </UniversalModal>

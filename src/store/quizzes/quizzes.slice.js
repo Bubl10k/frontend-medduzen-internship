@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchQuizzes, editQuiz, deleteQuiz, fetchQuizById } from './quizzes.actions';
+import { fetchQuizzes, editQuiz, deleteQuiz, fetchQuizById, createQuiz } from './quizzes.actions';
 
 const quizzesSlice = createSlice({
   name: 'quizzes',
@@ -40,6 +40,18 @@ const quizzesSlice = createSlice({
         state.selectedQuiz = action.payload;
       })
       .addCase(fetchQuizById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(createQuiz.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createQuiz.fulfilled, (state, action) => {
+        state.loading = false;
+        state.quizzes.push(action.payload);
+      })
+      .addCase(createQuiz.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

@@ -28,6 +28,20 @@ export const fetchQuizById = createAsyncThunk(
   },
 );
 
+export const createQuiz = createAsyncThunk(
+  'quizzes/createQuiz',
+  async (quizData, { rejectWithValue }) => {
+    try {
+      const data = await QuizService.createQuiz(quizData);
+      toast.success('Quiz created successfully!');
+      return data;
+    } catch (err) {
+      toast.error(err.response?.data?.detail || err.message);
+      return rejectWithValue(err.response?.data?.detail || err.message);
+    }
+  },
+);
+
 export const editQuiz = createAsyncThunk(
   'quizzes/editQuiz',
   async ({ id, quizData }, { rejectWithValue }) => {
@@ -39,7 +53,7 @@ export const editQuiz = createAsyncThunk(
       toast.error(error.response?.data.detail || error.message);
       return rejectWithValue(error.response?.data.detail || error.message);
     }
-  }
+  },
 );
 
 export const deleteQuiz = createAsyncThunk(
@@ -53,5 +67,5 @@ export const deleteQuiz = createAsyncThunk(
       toast.error(error.response?.data.detail || error.message);
       return rejectWithValue(error.response?.data.detail || error.message);
     }
-  }
+  },
 );

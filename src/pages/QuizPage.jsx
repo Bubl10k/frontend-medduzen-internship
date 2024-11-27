@@ -50,8 +50,6 @@ const QuizPage = () => {
     }
   };
 
-  console.log('saasd', selectedQuiz);
-
   if (loading || !selectedQuiz) return <Loading />;
 
   return (

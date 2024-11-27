@@ -104,8 +104,8 @@ const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
         }
       >
         <QuizCreationForm
-          quizData={quizData}
-          setQuizData={setQuizData}
+          quiz={quizData}
+          setQuiz={setQuizData}
           onSubmit={() => handleEditQuiz(quiz.id)}
         />
       </UniversalModal>
