@@ -9,7 +9,14 @@ import { selectUser } from '../store/users/users.selectors';
 import { fetchUsers } from '../store/users/users.actions';
 import { useTranslation } from 'react-i18next';
 
-const CompanyProfileUser = ({ userId, isOwner, isAdmin, companyId }) => {
+const CompanyProfileUser = ({
+  userId,
+  isOwner,
+  isAdmin,
+  companyId,
+  lastTestTaken,
+  handleShowChart,
+}) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -86,6 +93,11 @@ const CompanyProfileUser = ({ userId, isOwner, isAdmin, companyId }) => {
           sx={{ width: 56, height: 56 }}
         />
         <Typography variant="body2">{user?.username}</Typography>
+        {lastTestTaken && (
+          <Typography variant="body2">
+            {t('companyProfilePage.lastTestTaken')} {new Date(lastTestTaken).toLocaleString()}
+          </Typography>
+        )}
       </Box>
       {isOwner && (
         <>
@@ -104,12 +116,23 @@ const CompanyProfileUser = ({ userId, isOwner, isAdmin, companyId }) => {
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleRemoveMember}>{t('companyProfilePage.userRemove')}</MenuItem>
+            <MenuItem onClick={handleRemoveMember}>
+              {t('companyProfilePage.userRemove')}
+            </MenuItem>
             {isAdmin ? (
-              <MenuItem onClick={handleRemoveAdmin}>{t('companyProfilePage.adminRemove')}</MenuItem>
+              <>
+                <MenuItem onClick={handleRemoveAdmin}>
+                  {t('companyProfilePage.adminRemove')}
+                </MenuItem>
+              </>
             ) : (
-              <MenuItem onClick={handleAppointAdmin}>{t('companyProfilePage.adminAppoint')}</MenuItem>
+              <MenuItem onClick={handleAppointAdmin}>
+                {t('companyProfilePage.adminAppoint')}
+              </MenuItem>
             )}
+            <MenuItem onClick={handleShowChart}>
+              {t('companyProfilePage.show')} {user?.username} {t('companyProfilePage.analytics')}
+            </MenuItem>
           </Menu>
         </>
       )}

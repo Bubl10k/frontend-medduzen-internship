@@ -68,7 +68,18 @@
       "noAdmins": "No admins yet",
       "userRemove": "Remove User",
       "adminRemove": "Remove Admin",
-      "appointAdmin": "Appoint Admin"
+      "adminAppoint": "Appoint Admin",
+      "leave": "Leave Company",
+      "createQuiz": "Create Quiz",
+      "quizAnalytics": "See Quiz Analytics",
+      "hideQuizAnalytics": "Hide Quiz Analytics",
+      "quizList": "Quizzes List",
+      "invite": "Invite new user",
+      "invitations": "See company invitations",
+      "requests": "See company requests",
+      "lastTimeTaken":"Last Time Taken:",
+      "show": "Show",
+      "analytics": "Analytics"
     },
     "userProfilePage": {
       "editProfile": "Edit Profile",
@@ -79,7 +90,12 @@
       "upload": "Upload New Avatar",
       "deleteProfile": "Delete Profile",
       "deleteButton": "Delete",
-      "cancelButton": "Cancel"
+      "cancelButton": "Cancel",
+      "companiesJoined": "Companies Joined:",
+      "noCompanies": "No companies yet",
+      "quizList": "List of Quizzes You Taken",
+      "quiz": "Quiz:",
+      "lastTimeTaken": "Last Time Taken:"
     },
     "loginPage": {
       "title": "Sign In",

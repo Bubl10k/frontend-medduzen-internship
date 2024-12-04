@@ -58,7 +58,7 @@ const QuizService = {
   async startQuiz(quizId) {
     try {
       const response = await axiosInstance.post(
-        `${QUIZ_URL}${quizId}/start_quiz/`,
+        `${QUIZ_URL}${quizId}/start-quiz/`,
       );
       return response.data;
     } catch (error) {
@@ -70,7 +70,7 @@ const QuizService = {
   async completeQuiz(quizId, data) {
     try {
       const response = await axiosInstance.post(
-        `${QUIZ_URL}${quizId}/complete_quiz/`,
+        `${QUIZ_URL}${quizId}/complete-quiz/`,
         data,
       );
       return response.data;
@@ -79,6 +79,33 @@ const QuizService = {
       throw error;
     }
   },
+
+  async getScores() {
+    try {
+      const response = await axiosInstance.get(
+        `${QUIZ_URL}all-users-scores/`,
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching average scores:', error);
+      throw error;
+    }
+  },
+
+  async getUserScores(userId) {
+    try {
+      const response = await axiosInstance.get(
+        `${QUIZ_URL}average-user-scores/`,
+        {
+          params: { user: userId },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user scores:', error);
+      throw error;
+    }
+  }
 };
 
 export default QuizService;

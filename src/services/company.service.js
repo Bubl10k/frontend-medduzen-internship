@@ -244,7 +244,7 @@ const CompanyService = {
   async appointAdmin(data) {
     try {
       const response = await axiosInstance.patch(
-        `${COMPANY_ULR}${data.company_id}/appoint_admin/`,
+        `${COMPANY_ULR}${data.company_id}/appoint-admin/`,
         {
           user: data.user_id,
         },
@@ -259,7 +259,7 @@ const CompanyService = {
   async removeAdmin(data) {
     try {
       const response = await axiosInstance.patch(
-        `${COMPANY_ULR}${data.company_id}/remove_admin/`,
+        `${COMPANY_ULR}${data.company_id}/remove-admin/`,
         {
           user: data.user_id,
         },
@@ -270,6 +270,30 @@ const CompanyService = {
       throw error;
     }
   },
+
+  async getLastTakenQuizzesTime(companyId) {
+    try {
+      const response = await axiosInstance.get(`${COMPANY_ULR}${companyId}/last-completions-users/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching last taken quizzes time:', error);
+      throw error;
+    }
+  },
+
+  async getLastTakenUserTime(userId) {
+    try {
+      const response = await axiosInstance.get(`${COMPANY_ULR}last-completions-quizzes/`,
+        {
+          params: { user: userId },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching last taken user time:', error);
+      throw error;
+    }
+  }
 };
 
 export default CompanyService;

@@ -67,7 +67,17 @@
       "noAdmins": "Немає адміністраторів, поки що",
       "userRemove": "Видалити користувача",
       "adminRemove": "Видалити адміністратора",
-      "appointAdmin": "Додати адміністратора"
+      "adminAppoint": "Додати адміністратора",
+      "leave": "Покинути компанію",
+      "createQuiz": "Створити тест",
+      "quizAnalytics": "Подивитись статистику тесту",
+      "hideQuizAnalytics": "Сховати статистику тесту",
+      "quizList": "Список тестів",
+      "invite": "Запросити користувача",
+      "invitations": "Всі запрошення",
+      "requests": "Всі запити",
+      "show": "Показати",
+      "analytics": "Статистику"
     },
     "userProfilePage": {
       "editProfile": "Редагувати профіль",
@@ -78,7 +88,12 @@
       "upload": "Завантажити новий аватар",
       "deleteProfile": "Видалити профіль",
       "deleteButton": "Видалити",
-      "cancelButton": "Скасувати"
+      "cancelButton": "Скасувати",
+      "companiesJoined": "Компаніі:",
+      "noCompanies": "Немає компаній, поки що",
+      "quizList": "Список тестів",
+      "quiz": "Тест:",
+      "lastTimeTaken": "Останнї виконання:"
     },
     "loginPage": {
       "title": "Увійти",

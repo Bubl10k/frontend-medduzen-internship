@@ -37,14 +37,14 @@ const QuizPage = () => {
     const answersData = Object.keys(answers).map(questionId => {
       return {
         question: parseInt(questionId),
-        answer: answers[questionId],
+        answer: parseInt(answers[questionId]),
       };
     });
 
     try {
       await QuizService.completeQuiz(quizId, { answers: answersData });
       toast.success('Quiz completed successfully!');
-      navigate(ROUTES.COMPANY_PROFILE(selectedQuiz.company.id));
+      navigate(ROUTES.COMPANY_PROFILE(selectedQuiz.company));
     } catch (err) {
       toast.error(err.response?.data.detail || err.message);
     }
@@ -96,7 +96,7 @@ const QuizPage = () => {
               {question.answers.map((answer, index) => (
                 <FormControlLabel
                   key={index}
-                  value={answer.text}
+                  value={String(answer.id)}
                   control={
                     <Radio
                       sx={{

@@ -22,6 +22,9 @@ import { toast } from 'react-toastify';
 import CompanyProfileUser from '../components/CompanyProfileUser';
 import QuizCreationForm from '../components/QuizCreationForm';
 import { createQuiz } from '../store/quizzes/quizzes.actions';
+import QuizService from '../services/quiz.service';
+import Chart from '../components/Chart';
+import sortByTimeStamp from '../utils/sortByTimeStamp';
 
 const CompanyProfilePage = () => {
   const { t } = useTranslation();
@@ -32,16 +35,23 @@ const CompanyProfilePage = () => {
   const currUser = useSelector(currentUser);
   const [quiz, setQuiz] = useState({
     title: '',
+    company: companyId,
     frequency: 0,
     questions: [],
   });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
+  const [showChart, setShowChart] = useState(false);
+  const [chartData, setChartData] = useState({ x: [], y: [] });
+  const [lastTests, setLastTests] = useState({});
 
-  useEffect(() => {
-    dispatch(fetchCompanyById(companyId));
-  }, [dispatch, companyId]);
+  const fetchLastTakenTests = useCallback(async () => {
+    const lastTakenTests = await CompanyService.getLastTakenQuizzesTime(
+      companyId,
+    );
+    setLastTests(lastTakenTests);
+  }, [companyId]);
 
   const NonAdminMembers = useCallback(() => {
     if (!company) {
@@ -55,12 +65,14 @@ const CompanyProfilePage = () => {
     if (members.length > 0) {
       return (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
-          {members.map(member => (
+          {members.map((member, index) => (
             <CompanyProfileUser
               key={member}
               userId={member}
               isOwner={currUser === company.owner}
               companyId={company.id}
+              lastTestTaken={lastTests[index]?.last_completed_at}
+              handleShowChart={() => handleFetchUserAnalytics(member)}
             />
           ))}
         </Box>
@@ -112,6 +124,39 @@ const CompanyProfilePage = () => {
   const handleCreateQuiz = async () => {
     dispatch(createQuiz(quiz));
   };
+
+  const handleFetchAnalytics = async () => {
+    try {
+      const averageScores = await QuizService.getScores();
+      sortByTimeStamp(averageScores);
+
+      const x = averageScores.map(x => x.timestamp);
+      const y = averageScores.map(y => y.average_score);
+
+      setChartData({ x, y });
+      setShowChart(true);
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+  };
+
+  const handleFetchUserAnalytics = async userId => {
+    try {
+      const averageScores = await QuizService.getUserScores(userId);
+      sortByTimeStamp(averageScores);
+      const x = averageScores.map(x => x.timestamp);
+      const y = averageScores.map(y => y.average_score);
+      setChartData({ x, y });
+      setShowChart(true);
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchLastTakenTests();
+    dispatch(fetchCompanyById(companyId));
+  }, [dispatch, companyId, fetchLastTakenTests]);
 
   if (loading || !company) {
     return <Loading />;
@@ -174,7 +219,7 @@ const CompanyProfilePage = () => {
             color="error"
             onClick={handleLeaveCompany}
           >
-            Leave Company
+            {t('companyProfilePage.leave')}
           </Button>
         )}
       </Box>
@@ -240,22 +285,45 @@ const CompanyProfilePage = () => {
             onClick={() => setIsQuizModalOpen(true)}
             sx={{ mb: 2, mt: 2 }}
           >
-            Create Quiz
+            {t('companyProfilePage.createQuiz')}
           </Button>
-          <Button variant="contained" color="primary" fullWidth sx={{ mb: 2 }}>
-            <Link
-              to={ROUTES.QUIZZES(company.id)}
-              style={{
-                color: 'inherit',
-                textDecoration: 'none',
-                width: '100%',
-              }}
+          {!showChart ? (
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mb: 2 }}
+              onClick={handleFetchAnalytics}
             >
-              Quizzes List
-            </Link>
-          </Button>
+              {t('companyProfilePage.quizAnalytics')}
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mb: 2 }}
+              onClick={() => setShowChart(false)}
+            >
+              {t('companyProfilePage.hideQuizAnalytics')}
+            </Button>
+          )}
         </>
       ) : null}
+      {company.members.includes(currUser) && (
+        <Button variant="contained" color="primary" fullWidth sx={{ mb: 2 }}>
+          <Link
+            to={ROUTES.QUIZZES(company.id)}
+            style={{
+              color: 'inherit',
+              textDecoration: 'none',
+              width: '100%',
+            }}
+          >
+            {t('companyProfilePage.quizList')}
+          </Link>
+        </Button>
+      )}
       {currUser === company.owner && (
         <>
           <Button variant="contained" color="primary" fullWidth>
@@ -267,7 +335,7 @@ const CompanyProfilePage = () => {
                 width: '100%',
               }}
             >
-              Invite new user
+              {t('companyProfilePage.invite')}
             </Link>
           </Button>
           <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
@@ -279,7 +347,7 @@ const CompanyProfilePage = () => {
                 width: '100%',
               }}
             >
-              See company invitations
+              {t('companyProfilePage.invitations')}
             </Link>
           </Button>
           <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
@@ -291,11 +359,18 @@ const CompanyProfilePage = () => {
                 width: '100%',
               }}
             >
-              See company requests
+              {t('companyProfilePage.requests')}
             </Link>
           </Button>
         </>
       )}
+
+      {showChart && (
+        <Box sx={{ mt: 3 }}>
+          <Chart x={chartData.x} y={chartData.y} />
+        </Box>
+      )}
+
       <UniversalModal
         open={isEditModalOpen}
         onClose={handleCloseEditModal}

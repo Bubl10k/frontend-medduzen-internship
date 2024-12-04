@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import UserService from '../../services/user.service';
+import { toast } from 'react-toastify';
 
 export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
@@ -44,6 +45,7 @@ export const updateUser = createAsyncThunk(
       const data = await UserService.updateUser(user);
       return data;
     } catch (err) {
+      toast.error(err.response?.data?.detail || err.message);
       return rejectWithValue(err.response?.data || err.message);
     }
   },
