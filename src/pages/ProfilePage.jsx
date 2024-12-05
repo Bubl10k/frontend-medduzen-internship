@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  Card,
   CardContent,
   Container,
   Grid,
@@ -26,6 +27,11 @@ import {
 import { fetchCompaniesByUserId } from '../store/companies/companies.actions';
 import CompanyCard from '../components/CompanyCard';
 import { selectCompaniesState } from '../store/companies/companies.selectors';
+import QuizService from '../services/quiz.service';
+import sortByTimeStamp from '../utils/sortByTimeStamp';
+import { toast } from 'react-toastify';
+import Chart from '../components/Chart';
+import CompanyService from '../services/company.service';
 
 const ProfilePage = () => {
   useTokenRefresh();
@@ -45,11 +51,36 @@ const ProfilePage = () => {
   });
   const [open, setOpen] = useState(false);
   const { companies } = useSelector(selectCompaniesState);
+  const [chartData, setChartData] = useState({ x: [], y: [] });
+  const [lastTests, setLastTests] = useState({});
+
+  const fetchUserAnalytics = async userId => {
+    try {
+      const averageScores = await QuizService.getUserScores(userId);
+      sortByTimeStamp(averageScores);
+      const x = averageScores.map(x => x.timestamp);
+      const y = averageScores.map(y => y.average_score);
+      setChartData({ x, y });
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+  };
+
+  const fetchLastTakenTests = async userId => {
+    try {
+      const lastTests = await CompanyService.getLastTakenUserTime(userId);
+      setLastTests(lastTests);
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchUserById(userId));
     dispatch(fetchCompaniesByUserId(userId));
-  }, [dispatch, userId, companies]);
+    fetchUserAnalytics(userId);
+    fetchLastTakenTests(userId);
+  }, [dispatch, userId]);
 
   useEffect(() => {
     if (selectedUser) {
@@ -237,21 +268,55 @@ const ProfilePage = () => {
 
       <Paper elevation={3} sx={{ mt: 4, p: 3, borderRadius: 2 }}>
         <Typography variant="h5" sx={{ mb: 2 }}>
-          Companies Joined:
+          {t('userProfilePage.companiesJoined')}
         </Typography>
         <Grid container spacing={2}>
           {companies && companies.length > 0 ? (
             companies.map(company => (
               <Grid item xs={12} sm={6} md={4} key={company.id}>
-                <CompanyCard company={company} isCompanyMember={currUser == userId} />
+                <CompanyCard
+                  company={company}
+                  isCompanyMember={currUser == userId}
+                />
               </Grid>
             ))
           ) : (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1, ml: 2 }}>
-              No companies yet
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ mt: 1, ml: 2 }}
+            >
+              {t('userProfilePage.noCompanies')}
             </Typography>
           )}
         </Grid>
+        {currUser == userId && (
+          <>
+            <Chart x={chartData.x} y={chartData.y} />
+            <Typography variant="h5" sx={{ mt: 3, textAlign: 'center' }}>
+              {t('userProfilePage.quizList')}
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 3 }}>
+              {lastTests && lastTests.length > 0
+                ? lastTests.map(lastTest => (
+                    <Card key={lastTest.id} sx={{ width: 250, height: 100 }}>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          {t('userProfilePage.quiz')} {lastTest.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {t('userProfilePage.lastTimeTaken')}{' '}
+                          {new Date(
+                            lastTest.last_completed_at,
+                          ).toLocaleString()}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  ))
+                : null}
+            </Box>
+          </>
+        )}
       </Paper>
 
       <UniversalModal

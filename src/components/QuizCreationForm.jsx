@@ -88,6 +88,15 @@ const QuizCreationForm = ({ quiz, setQuiz, onSubmit }) => {
         fullWidth
         sx={{ mb: 2 }}
       />
+      <TextField
+        label="Quiz Frequency (Number of days)"
+        value={quiz.frequency}
+        onChange={e =>
+          setQuiz({ ...quiz, frequency: e.target.value })
+        }
+        fullWidth
+        sx={{ mb: 2 }}
+      />
       {quiz.questions.map((question, questionIndex) => (
         <Box
           key={questionIndex}
