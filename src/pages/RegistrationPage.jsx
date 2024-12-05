@@ -53,7 +53,7 @@ const RegistrationPage = () => {
   };
 
   const handleGitHubLogin = () => {
-    
+    AuthService.githubLogin();
   };
 
   return (

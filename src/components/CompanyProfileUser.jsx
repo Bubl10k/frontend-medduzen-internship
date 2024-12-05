@@ -8,6 +8,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { selectUser } from '../store/users/users.selectors';
 import { fetchUsers } from '../store/users/users.actions';
 import { useTranslation } from 'react-i18next';
+import downloadResults from '../utils/downloadResults';
 
 const CompanyProfileUser = ({
   userId,
@@ -74,6 +75,19 @@ const CompanyProfileUser = ({
     }
   };
 
+  const handleDownloadResults = async (companyId, userId, format) => {
+    try {
+      const response = await CompanyService.geCompanyUsersResults(
+        format,
+        companyId,
+        userId,
+      );
+      downloadResults(response, format);
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -95,7 +109,8 @@ const CompanyProfileUser = ({
         <Typography variant="body2">{user?.username}</Typography>
         {lastTestTaken && (
           <Typography variant="body2">
-            {t('companyProfilePage.lastTestTaken')} {new Date(lastTestTaken).toLocaleString()}
+            {t('companyProfilePage.lastTimeTaken')}{' '}
+            {new Date(lastTestTaken).toLocaleString()}
           </Typography>
         )}
       </Box>
@@ -131,7 +146,18 @@ const CompanyProfileUser = ({
               </MenuItem>
             )}
             <MenuItem onClick={handleShowChart}>
-              {t('companyProfilePage.show')} {user?.username} {t('companyProfilePage.analytics')}
+              {t('companyProfilePage.show')} {user?.username}{' '}
+              {t('companyProfilePage.analytics')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleDownloadResults(companyId, userId, 'csv')}
+            >
+              {t('companyProfilePage.exportCsv')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleDownloadResults(companyId, userId, 'json')}
+            >
+              {t('companyProfilePage.exportJson')}
             </MenuItem>
           </Menu>
         </>

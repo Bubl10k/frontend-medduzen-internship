@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import QuizService from '../services/quiz.service';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
@@ -9,12 +9,15 @@ import ROUTES from '../utils/routes';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { deleteQuiz, editQuiz } from '../store/quizzes/quizzes.actions';
+import downloadResults from '../utils/downloadResults';
 
 const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
   const { t } = useTranslation();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openExportModal, setOpenExportModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [quizData, setQuizData] = useState({ ...quiz });
+  const [exportFormat, setExportFormat] = useState('csv');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -40,6 +43,16 @@ const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
     try {
       await QuizService.startQuiz(id);
       navigate(ROUTES.QUIZ(id));
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+  };
+
+  const handleDownloadQuizResults = async (quizId, format) => {
+    try {
+      const response = await QuizService.getQuizResults(quizId, format);
+      downloadResults(response, format);
+      setOpenExportModal(false);
     } catch (err) {
       toast.error(err.response?.data.detail || err.message);
     }
@@ -76,6 +89,13 @@ const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
         </Button>
         {isOwnerOrAdmin && (
           <>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setOpenExportModal(true)}
+            >
+              {t('quizzes.exportResults')}
+            </Button>
             <Button
               variant="outlined"
               color="primary"
@@ -125,6 +145,25 @@ const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
         }
       >
         <Typography>{t('quizzes.deleteConfirm')}</Typography>
+      </UniversalModal>
+      <UniversalModal
+        open={openExportModal}
+        onClose={() => setOpenExportModal(false)}
+        title={t('quizzes.exportResults')}
+        actions={
+          <Button onClick={() => handleDownloadQuizResults(quiz.id, exportFormat)} color="primary">
+            {t('quizzes.download')}
+          </Button>
+        }
+      >
+        <Typography>{t('quizzes.chooseFormat')}</Typography>
+        <RadioGroup
+          value={exportFormat}
+          onChange={(e) => setExportFormat(e.target.value)}
+        >
+          <FormControlLabel value="csv" control={<Radio />} label="CSV" />
+          <FormControlLabel value="json" control={<Radio />} label="JSON" />
+        </RadioGroup>
       </UniversalModal>
     </Box>
   );

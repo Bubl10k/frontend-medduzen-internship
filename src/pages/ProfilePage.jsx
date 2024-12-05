@@ -32,6 +32,7 @@ import sortByTimeStamp from '../utils/sortByTimeStamp';
 import { toast } from 'react-toastify';
 import Chart from '../components/Chart';
 import CompanyService from '../services/company.service';
+import downloadResults from '../utils/downloadResults';
 
 const ProfilePage = () => {
   useTokenRefresh();
@@ -116,6 +117,15 @@ const ProfilePage = () => {
   const handleOpen = () => {
     dispatch(deleteUser(selectedUser.id));
     setOpen(false);
+  };
+
+  const handleDownloadResults = async format => {
+    try {
+      const response = await QuizService.getUserQuizResults(format);
+      downloadResults(response, format);
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
   };
 
   if (!selectedUser) {
@@ -296,6 +306,26 @@ const ProfilePage = () => {
             <Typography variant="h5" sx={{ mt: 3, textAlign: 'center' }}>
               {t('userProfilePage.quizList')}
             </Typography>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 3 }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ width: '40%' }}
+                onClick={() => handleDownloadResults('csv')}
+              >
+                {t('userProfilePage.exportCsv')}
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ width: '40%' }}
+                onClick={() => handleDownloadResults('json')}
+              >
+                {t('userProfilePage.exportJson')}
+              </Button>
+            </Box>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 3 }}>
               {lastTests && lastTests.length > 0
                 ? lastTests.map(lastTest => (

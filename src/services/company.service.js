@@ -273,7 +273,9 @@ const CompanyService = {
 
   async getLastTakenQuizzesTime(companyId) {
     try {
-      const response = await axiosInstance.get(`${COMPANY_ULR}${companyId}/last-completions-users/`);
+      const response = await axiosInstance.get(
+        `${COMPANY_ULR}${companyId}/last-completions-users/`,
+      );
       return response.data;
     } catch (error) {
       console.error('Error fetching last taken quizzes time:', error);
@@ -283,7 +285,8 @@ const CompanyService = {
 
   async getLastTakenUserTime(userId) {
     try {
-      const response = await axiosInstance.get(`${COMPANY_ULR}last-completions-quizzes/`,
+      const response = await axiosInstance.get(
+        `${COMPANY_ULR}last-completions-quizzes/`,
         {
           params: { user: userId },
         },
@@ -293,7 +296,26 @@ const CompanyService = {
       console.error('Error fetching last taken user time:', error);
       throw error;
     }
-  }
+  },
+
+  async geCompanyUsersResults(fileFormat, companyId, userId = null) {
+    try {
+      console.log(fileFormat);
+      const response = await axiosInstance.get(
+        `${COMPANY_ULR}${companyId}/export-company-results/`,
+        {
+          params: {
+            ...(userId && { user: userId }),
+            file_format: fileFormat,
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching company users results:', error);
+      throw error;
+    }
+  },
 };
 
 export default CompanyService;
