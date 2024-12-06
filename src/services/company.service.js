@@ -300,7 +300,6 @@ const CompanyService = {
 
   async geCompanyUsersResults(fileFormat, companyId, userId = null) {
     try {
-      console.log(fileFormat);
       const response = await axiosInstance.get(
         `${COMPANY_ULR}${companyId}/export-company-results/`,
         {
