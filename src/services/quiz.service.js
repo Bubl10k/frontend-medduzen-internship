@@ -82,9 +82,7 @@ const QuizService = {
 
   async getScores() {
     try {
-      const response = await axiosInstance.get(
-        `${QUIZ_URL}all-users-scores/`,
-      );
+      const response = await axiosInstance.get(`${QUIZ_URL}all-users-scores/`);
       return response.data;
     } catch (error) {
       console.error('Error fetching average scores:', error);
@@ -103,6 +101,36 @@ const QuizService = {
       return response.data;
     } catch (error) {
       console.error('Error fetching user scores:', error);
+      throw error;
+    }
+  },
+
+  async getUserQuizResults(fileFormat) {
+    try {
+      const response = await axiosInstance.get(
+        `${QUIZ_URL}export-user-results/`,
+        {
+          params: { file_format: fileFormat },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user quiz results:', error);
+      throw error;
+    }
+  },
+
+  async getQuizResults(quizId, fileFormat) {
+    try {
+      const response = await axiosInstance.get(
+        `${QUIZ_URL}${quizId}/export-quiz-results/`,
+        {
+          params: { file_format: fileFormat },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching quiz results:', error);
       throw error;
     }
   }

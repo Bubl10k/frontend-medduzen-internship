@@ -79,7 +79,11 @@
       "requests": "See company requests",
       "lastTimeTaken":"Last Time Taken:",
       "show": "Show",
-      "analytics": "Analytics"
+      "analytics": "Analytics",
+      "exportCsv": "Export Quiz Results to CSV",
+      "exportJson": "Export Quiz Results to JSON",
+      "exportCsvAllUsers": "Export All Users Quiz Results in CSV ",
+      "exportJsonAllUsers": "Export All Users Quiz Results in JSON"
     },
     "userProfilePage": {
       "editProfile": "Edit Profile",
@@ -95,7 +99,9 @@
       "noCompanies": "No companies yet",
       "quizList": "List of Quizzes You Taken",
       "quiz": "Quiz:",
-      "lastTimeTaken": "Last Time Taken:"
+      "lastTimeTaken": "Last Time Taken:",
+      "exportCsv": "Export Quiz Data in CSV",
+      "exportJson": "Export Quiz Data in JSON"
     },
     "loginPage": {
       "title": "Sign In",
@@ -165,7 +171,10 @@
     "deleteQuestion": "Delete Question",
     "addQuestion": "Add Question",
     "submitQuiz": "Submit Quiz",
-    "quizzRemove": "Question removed successfully!"
+    "quizzRemove": "Question removed successfully!",
+    "exportResults": "Export Results",
+    "download": "Download",
+    "chooseFormat": "Choose a format"
   }
 }
   

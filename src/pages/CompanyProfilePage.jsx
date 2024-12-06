@@ -25,6 +25,7 @@ import { createQuiz } from '../store/quizzes/quizzes.actions';
 import QuizService from '../services/quiz.service';
 import Chart from '../components/Chart';
 import sortByTimeStamp from '../utils/sortByTimeStamp';
+import downloadResults from '../utils/downloadResults';
 
 const CompanyProfilePage = () => {
   const { t } = useTranslation();
@@ -148,6 +149,18 @@ const CompanyProfilePage = () => {
       const y = averageScores.map(y => y.average_score);
       setChartData({ x, y });
       setShowChart(true);
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
+  };
+
+  const handleDownloadAllUsersResults = async (companyId, format) => {
+    try {
+      const response = await CompanyService.geCompanyUsersResults(
+        format,
+        companyId,
+      );
+      downloadResults(response, format);
     } catch (err) {
       toast.error(err.response?.data.detail || err.message);
     }
@@ -286,6 +299,24 @@ const CompanyProfilePage = () => {
             sx={{ mb: 2, mt: 2 }}
           >
             {t('companyProfilePage.createQuiz')}
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mb: 2 }}
+            onClick={() => handleDownloadAllUsersResults(company.id, 'csv')}
+          >
+           {t('companyProfilePage.exportCsvAllUsers')}
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mb: 2 }}
+            onClick={() => handleDownloadAllUsersResults(company.id, 'json')}
+          >
+            {t('companyProfilePage.exportJsonAllUsers')}
           </Button>
           {!showChart ? (
             <Button
