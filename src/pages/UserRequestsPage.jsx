@@ -26,6 +26,8 @@ const UserRequestsPage = () => {
     fetchUserRequests();
   }, [currUser]);
 
+  console.log(requests);
+
   return (
     <Box sx={{ maxWidth: 600, margin: '0 auto', mt: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>

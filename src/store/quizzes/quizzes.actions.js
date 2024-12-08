@@ -33,7 +33,6 @@ export const createQuiz = createAsyncThunk(
   async (quizData, { rejectWithValue }) => {
     try {
       const data = await QuizService.createQuiz(quizData);
-      toast.success('Quiz created successfully!');
       return data;
     } catch (err) {
       toast.error(err.response?.data?.detail || err.message);

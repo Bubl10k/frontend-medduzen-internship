@@ -19,6 +19,7 @@ const CompanyInvitationsPage = lazy(() => import('../pages/CompanyInvitationsPag
 const QuizListPage = lazy(() => import('../pages/QuizListPage'));
 const QuizPage = lazy(() => import('../pages/QuizPage'));
 const GitHubCallback = lazy(() => import('../utils/GitHubCallback'));
+const NotificationPages = lazy(() => import('../pages/NotificationsPage'));
 
 const AppRouter = () => {
   return (
@@ -36,6 +37,7 @@ const AppRouter = () => {
         <Route path={ROUTES.REQUESTS_COMPANY(':companyId')} element={<PrivateRoute><CompanyRequestsPage /></PrivateRoute>} />
         <Route path={ROUTES.QUIZZES(':companyId')} element={<PrivateRoute><QuizListPage /></PrivateRoute>}/>
         <Route path={ROUTES.QUIZ(':quizId')} element={<PrivateRoute><QuizPage /></PrivateRoute>}/>
+        <Route path={ROUTES.NOTIFICATIONS} element={<PrivateRoute><NotificationPages /></PrivateRoute>}/>
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegistrationPage />} />
         <Route path={ROUTES.GITHUB_CALLBACK} element={<GitHubCallback />} />

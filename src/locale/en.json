@@ -175,6 +175,11 @@
     "exportResults": "Export Results",
     "download": "Download",
     "chooseFormat": "Choose a format"
+  },
+  "notifications": {
+    "title": "List of Notifications",
+    "noNotifications": "No notifications found.",
+    "markAsRead": "Mark as read"
   }
 }
   
