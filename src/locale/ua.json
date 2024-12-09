@@ -163,6 +163,11 @@
     "addQuestion": "Додати питання",
     "submitQuiz": "Зберегти зміни",
     "quizzRemove": "Тест успішно видалено"
+  },
+  "notifications": {
+    "title": "Список нотифікацій",
+    "noNotifications": "Нотифікацій не знайдено.",
+    "markAsRead": "Позначити як прочитане"
   }
 }
   

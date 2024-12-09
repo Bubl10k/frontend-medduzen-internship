@@ -10,6 +10,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
 import { FormControl, IconButton, Select } from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AuthService from '../services/auth.service';
@@ -35,12 +36,11 @@ const Header = () => {
 
   useEffect(() => {
     if (currentUser) {
-      dispatch(fetchUserById(currentUser));
       dispatch(fetchUserById(currentUser))
         .then(action => {
           if (action.payload) {
             setUser(action.payload);
-             }
+          }
         })
         .catch(error => toast.error(error));
     }
@@ -72,6 +72,7 @@ const Header = () => {
     { name: t('header.companyList'), link: ROUTES.COMPANIES },
     { name: t('header.about'), link: ROUTES.ABOUT },
   ];
+  const canShowUserFeatures = isAuthenticated && user && currentUser;
 
   return (
     <AppBar position="static">
@@ -107,6 +108,21 @@ const Header = () => {
               </Button>
             ))}
           </Box>
+          {canShowUserFeatures && (
+            <Button
+              component={Link}
+              to={ROUTES.NOTIFICATIONS}
+              sx={{
+                mr: 2,
+                color: 'white',
+                display: 'block',
+                textAlign: 'center',
+              }}
+              variant="contained"
+            >
+              <NotificationsIcon />
+            </Button>
+          )}
           <FormControl
             sx={{ minWidth: 120, marginLeft: 'auto', marginRight: 2 }}
           >
@@ -121,7 +137,7 @@ const Header = () => {
             </Select>
           </FormControl>
           <Box sx={{ flexGrow: 0 }}>
-            {isAuthenticated && user && currentUser && (
+            {canShowUserFeatures && (
               <>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -156,8 +172,8 @@ const Header = () => {
                     </Typography>
                   </MenuItem>
                   <MenuItem>
-                    <Typography 
-                      sx={{ 
+                    <Typography
+                      sx={{
                         textAlign: 'center',
                         textDecoration: 'none',
                         color: 'inherit',
@@ -165,13 +181,13 @@ const Header = () => {
                       variant="a"
                       component={Link}
                       to={ROUTES.INVITATIONS_USER}
-                      >
+                    >
                       Invitations
                     </Typography>
                   </MenuItem>
                   <MenuItem>
-                    <Typography 
-                      sx={{ 
+                    <Typography
+                      sx={{
                         textAlign: 'center',
                         textDecoration: 'none',
                         color: 'inherit',
@@ -179,7 +195,7 @@ const Header = () => {
                       variant="a"
                       component={Link}
                       to={ROUTES.REQUESTS_USER}
-                      >
+                    >
                       Requests
                     </Typography>
                   </MenuItem>

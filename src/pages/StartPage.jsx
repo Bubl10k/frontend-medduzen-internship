@@ -4,11 +4,8 @@ import DisplayText from '../components/DisplayText';
 import UpdateText from '../components/UpdateText';
 import { useEffect, useState } from 'react';
 import healthCheck from '../services/healthcheck.service';
-import useTokenRefresh from '../hooks/useTokenRefresh';
-
 
 const StartPage = () => {
-  useTokenRefresh();
   const { t } = useTranslation();
   const [status, setStatus] = useState(null);
 

@@ -15,7 +15,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import useTokenRefresh from '../hooks/useTokenRefresh';
 import { currentUser } from '../store/auth/auth.slice';
 import UniversalModal from '../components/UniversalModal';
 import { selectUserState } from '../store/users/users.selectors';
@@ -35,7 +34,6 @@ import CompanyService from '../services/company.service';
 import downloadResults from '../utils/downloadResults';
 
 const ProfilePage = () => {
-  useTokenRefresh();
   const { userId } = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();

@@ -14,6 +14,7 @@ const ROUTES = {
     REQUESTS_COMPANY: (companyId) => `/company-requests/${companyId}`,
     QUIZZES: (companyId) => `/quizzes/${companyId}`,
     QUIZ: (quizId) => `/quiz/${quizId}`,
+    NOTIFICATIONS: '/notifications',
   };
   
   export default ROUTES;
