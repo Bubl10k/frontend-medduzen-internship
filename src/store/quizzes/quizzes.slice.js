@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchQuizzes, editQuiz, deleteQuiz, fetchQuizById, createQuiz } from './quizzes.actions';
+import {
+  fetchQuizzes,
+  editQuiz,
+  deleteQuiz,
+  fetchQuizById,
+  createQuiz,
+} from './quizzes.actions';
 
 const quizzesSlice = createSlice({
   name: 'quizzes',
@@ -61,8 +67,10 @@ const quizzesSlice = createSlice({
       })
       .addCase(editQuiz.fulfilled, (state, action) => {
         state.loading = false;
-        state.quizzes = state.quizzes.map((quiz) =>
-          quiz.id === action.payload.quizData.id ? action.payload.quizData : quiz
+        state.quizzes = state.quizzes.map(quiz =>
+          quiz.id === action.payload.quizData.id
+            ? action.payload.quizData
+            : quiz,
         );
       })
       .addCase(editQuiz.rejected, (state, action) => {

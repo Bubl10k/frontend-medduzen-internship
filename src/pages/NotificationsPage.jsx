@@ -25,7 +25,7 @@ const NotificationsPage = () => {
       </Typography>
 
       {notifications.length === 0 && (
-        <Typography>{t('notifications.noNotifications')}</Typography>
+        <Typography variant="body1" sx={{ textAlign: 'center' }}>{t('notifications.noNotifications')}</Typography>
       )}
       <Box sx={{ mt: 5 }}>
         {!loading &&
