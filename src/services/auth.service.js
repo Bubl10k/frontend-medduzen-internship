@@ -59,7 +59,7 @@ const AuthService = {
   },
 
   async githubLogin() {
-    window.location.href = import.meta.env.VITE_API_URL + GITHUB_LOGIN_URL;
+    window.location.href = process.env.VITE_API_URL + GITHUB_LOGIN_URL;
   },
 
   handleGitHubCallback(authToken) {

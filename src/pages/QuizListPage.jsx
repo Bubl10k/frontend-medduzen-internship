@@ -23,7 +23,7 @@ const QuizListPage = () => {
 
   useEffect(() => {
     dispatch(fetchCompanyById(companyId));
-    dispatch(fetchQuizzes(companyId, page));
+    dispatch(fetchQuizzes({ companyId, page }));
   }, [dispatch, companyId, page]);
 
   const handlePageChange = (event, value) => {
