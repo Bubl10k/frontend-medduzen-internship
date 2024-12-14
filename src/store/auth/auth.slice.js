@@ -30,6 +30,7 @@ const authSlice = createSlice({
     login: (state, action) => {
       const { access, refresh } = action.payload;
       state.tokens = { access, refresh };
+      state.currentUserId = jwtDecode(access).user_id;
       state.isAuthenticated = true;
     },
     logout: state => {

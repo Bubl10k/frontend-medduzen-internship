@@ -46,11 +46,10 @@ export const editQuiz = createAsyncThunk(
   async ({ id, quizData }, { rejectWithValue }) => {
     try {
       await QuizService.updateQuiz(id, quizData);
-      toast.success('Quiz updated successfully!');
       return { id, quizData };
     } catch (error) {
-      toast.error(error.response?.data.detail || error.message);
-      return rejectWithValue(error.response?.data.detail || error.message);
+      toast.error(error.response?.data?.detail || error.message);
+      return rejectWithValue(error.response?.data?.detail || error.message);
     }
   },
 );

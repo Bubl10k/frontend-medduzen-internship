@@ -1,4 +1,11 @@
-import { Box, Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+} from '@mui/material';
 import QuizService from '../services/quiz.service';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
@@ -30,6 +37,7 @@ const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
   const handleEditQuiz = id => {
     dispatch(editQuiz({ id, quizData })).then(response => {
       if (!response.error) {
+        toast.success('Quiz edited successfully!');
         setOpenEditModal(false);
       }
     });
@@ -57,6 +65,8 @@ const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
       toast.error(err.response?.data.detail || err.message);
     }
   };
+
+  console.log(quizData);
 
   return (
     <Box
@@ -151,7 +161,10 @@ const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
         onClose={() => setOpenExportModal(false)}
         title={t('quizzes.exportResults')}
         actions={
-          <Button onClick={() => handleDownloadQuizResults(quiz.id, exportFormat)} color="primary">
+          <Button
+            onClick={() => handleDownloadQuizResults(quiz.id, exportFormat)}
+            color="primary"
+          >
             {t('quizzes.download')}
           </Button>
         }
@@ -159,7 +172,7 @@ const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
         <Typography>{t('quizzes.chooseFormat')}</Typography>
         <RadioGroup
           value={exportFormat}
-          onChange={(e) => setExportFormat(e.target.value)}
+          onChange={e => setExportFormat(e.target.value)}
         >
           <FormControlLabel value="csv" control={<Radio />} label="CSV" />
           <FormControlLabel value="json" control={<Radio />} label="JSON" />
