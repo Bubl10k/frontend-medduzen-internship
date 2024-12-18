@@ -1,13 +1,13 @@
 name: AWS S3 Deployment
 
 on:
+  push:
   pull_request:
-    types:
-      - closed
+  workflow_call:
+
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop'
     name: Deploy to S3
     runs-on: ubuntu-latest
     steps:

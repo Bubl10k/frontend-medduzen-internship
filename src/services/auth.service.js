@@ -6,7 +6,6 @@ import TokenService from './token.service';
 const LOGIN_URL = '/auth/jwt/create/';
 const REFRESH_URL = '/auth/jwt/refresh/';
 const REGISTER_URL = 'api/users/users/';
-const GITHUB_LOGIN_URL = '/auth/social/login/github/';
 
 const AuthService = {
   async login(credentials) {
@@ -34,7 +33,7 @@ const AuthService = {
         refresh: auth?.refresh,
       });
       if (response.status === 200) {
-        const tokens = { ...auth, access: response.data.access }
+        const tokens = { ...auth, access: response.data.access };
         TokenService.setTokens(tokens);
         store.dispatch(login({ tokens }));
         return tokens.access;
@@ -50,8 +49,11 @@ const AuthService = {
 
   async register(credentials) {
     try {
-      const response = await axiosInstance.post(REGISTER_URL, credentials);
-      return response.data;
+      await axiosInstance.post(REGISTER_URL, credentials);
+      await this.login({
+        username: credentials.username,
+        password: credentials.password,
+      });
     } catch (err) {
       console.error(err);
       throw err;
@@ -59,9 +61,13 @@ const AuthService = {
   },
 
   async githubLogin() {
-    window.location.href = import.meta.env.VITE_API_URL + GITHUB_LOGIN_URL;
+    const githubAuthUrl = `${
+      import.meta.env.VITE_API_URL
+    }auth/social/login/github/?redirect_uri=${encodeURIComponent(
+      import.meta.env.VITE_ORIGIN + '/auth/github/callback',
+    )}`;
+    window.location.href = githubAuthUrl;
   },
-
   handleGitHubCallback(authToken) {
     TokenService.setTokens(authToken);
     store.dispatch(login(authToken));

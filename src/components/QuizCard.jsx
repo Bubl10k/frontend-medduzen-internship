@@ -66,8 +66,6 @@ const QuizCard = ({ quiz, isOwnerOrAdmin }) => {
     }
   };
 
-  console.log(quizData);
-
   return (
     <Box
       sx={{
