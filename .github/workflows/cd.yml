@@ -1,13 +1,14 @@
 name: AWS S3 Deployment
 
 on:
-  push:
   pull_request:
-  workflow_call:
+    types:
+      - closed
 
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop'
     name: Deploy to S3
     runs-on: ubuntu-latest
     steps:
@@ -26,6 +27,9 @@ jobs:
           env:
             VITE_API_URL: ${{ secrets.VITE_API_URL }}
             VITE_WEBSOCKET_URL: ${{ secrets.VITE_WEBSOCKET_URL }}
+            VITE_GITHUB_CLIENT_ID: ${{ secrets.VITE_GITHUB_CLIENT_ID }}
+            VITE_GITHUB_CLIENT_SECRET: ${{ secrets.VITE_GITHUB_CLIENT_SECRET }}
+            VITE_GITHUB_REDIRECT_URI: ${{ secrets.VITE_GITHUB_REDIRECT_URI }}
           run: npm run build
         
         - name: Deploy to S3

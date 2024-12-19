@@ -7,7 +7,7 @@ const ROUTES = {
     COMPANY_PROFILE: (companyId) => `/companies/${companyId}`,
     LOGIN: '/login',
     REGISTER: '/register',
-    GITHUB_CALLBACK: '/auth/github/callback',
+    GITHUB_CALLBACK: '/callback',
     INVITATIONS_USER: '/user-invitations',
     REQUESTS_USER: '/user-requests',
     INVITATIONS_COMPANY: '/company-invitations',
