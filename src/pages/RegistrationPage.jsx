@@ -153,7 +153,7 @@ const RegistrationPage = () => {
             align="center"
             sx={{ mt: 2 }}
           >
-            {t('registrationPage.alreadyHaveAnAccount')}{' '}
+            {t('registrationPage.alreadyHaveAccount')}{' '}
             <Link
               to="/login"
               style={{ textDecoration: 'none', color: 'primary.main' }}

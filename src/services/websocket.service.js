@@ -6,6 +6,7 @@ class WebSocketService {
   connect(url) {
     if (!this.socket) {
       this.socket = new WebSocket(url);
+      console.log('Connected to WebSocket');
     }
   }
 
@@ -13,6 +14,7 @@ class WebSocketService {
     if (this.socket) {
       this.socket.close();
       this.socket = null;
+      console.log('Disconnected from WebSocket');
     }
   }
 

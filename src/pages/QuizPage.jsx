@@ -16,7 +16,6 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectQuizzesState } from '../store/quizzes/quizzes.selectors';
 import { fetchQuizById } from '../store/quizzes/quizzes.actions';
-import React from 'react';
 
 const QuizPage = () => {
   const { t } = useTranslation();

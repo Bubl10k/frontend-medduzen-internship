@@ -11,7 +11,7 @@ const socketMiddleware =
     switch (type) {
       case 'socket/connect':
         socketService.connect(
-          `${process.env.VITE_WEBSOCKET_URL}/?token=${
+          `${import.meta.env.VITE_WEBSOCKET_URL}/?token=${
             TokenService.getTokens()?.access
           }`,
         );

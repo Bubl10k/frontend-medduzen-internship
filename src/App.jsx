@@ -13,7 +13,7 @@ const App = () => {
   const tokens = useSelector(selectAuthToken);
 
   useEffect(() => {
-    if (tokens) {
+    if (tokens.access) {
       store.dispatch({ type: 'socket/connect' });
     }
 

@@ -54,38 +54,13 @@ const CompanyProfilePage = () => {
     setLastTests(lastTakenTests);
   }, [companyId]);
 
-  const NonAdminMembers = useCallback(() => {
+  const getNonAdminMembers = useCallback(() => {
     if (!company) {
-      return <Loading />;
+      return [];
     }
 
-    const members = company.members.filter(
-      member => !company.admins.includes(member),
-    );
-
-    if (members.length > 0) {
-      return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
-          {members.map((member, index) => (
-            <CompanyProfileUser
-              key={member}
-              userId={member}
-              isOwner={currUser === company.owner}
-              companyId={company.id}
-              lastTestTaken={lastTests[index]?.last_completed_at}
-              handleShowChart={() => handleFetchUserAnalytics(member)}
-            />
-          ))}
-        </Box>
-      );
-    }
-
-    return (
-      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-        {t('companyProfilePage.noMembers')}
-      </Typography>
-    );
-  }, [company, currUser]);
+    return company.members.filter(member => !company.admins.includes(member));
+  }, [company]);
 
   const handleOpenEditModal = () => setIsEditModalOpen(true);
   const handleCloseEditModal = () => setIsEditModalOpen(false);
@@ -123,7 +98,13 @@ const CompanyProfilePage = () => {
   };
 
   const handleCreateQuiz = async () => {
-    dispatch(createQuiz(quiz));
+    try {
+      await dispatch(createQuiz(quiz)).unwrap();
+      toast.success('Quiz created successfully!');
+      setIsQuizModalOpen(false);
+    } catch (err) {
+      toast.error(err.response?.data.detail || err.message);
+    }
   };
 
   const handleFetchAnalytics = async () => {
@@ -170,6 +151,8 @@ const CompanyProfilePage = () => {
     fetchLastTakenTests();
     dispatch(fetchCompanyById(companyId));
   }, [dispatch, companyId, fetchLastTakenTests]);
+
+  const nonAdminMembers = getNonAdminMembers();
 
   if (loading || !company) {
     return <Loading />;
@@ -253,7 +236,24 @@ const CompanyProfilePage = () => {
         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
           {t('companyProfilePage.teamMembers')}
         </Typography>
-        {NonAdminMembers()}
+        {nonAdminMembers.length > 0 ? (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
+            {nonAdminMembers.map((member, index) => (
+              <CompanyProfileUser
+                key={member}
+                userId={member}
+                isOwner={currUser === company.owner}
+                companyId={company.id}
+                lastTestTaken={lastTests[index]?.last_completed_at}
+                handleShowChart={() => handleFetchUserAnalytics(member)}
+              />
+            ))}
+          </Box>
+        ) : (
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            {t('companyProfilePage.noMembers')}
+          </Typography>
+        )}
       </Box>
 
       <Box sx={{ mb: 3 }}>
@@ -307,7 +307,7 @@ const CompanyProfilePage = () => {
             sx={{ mb: 2 }}
             onClick={() => handleDownloadAllUsersResults(company.id, 'csv')}
           >
-           {t('companyProfilePage.exportCsvAllUsers')}
+            {t('companyProfilePage.exportCsvAllUsers')}
           </Button>
           <Button
             variant="contained"
