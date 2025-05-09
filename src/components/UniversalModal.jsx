@@ -6,21 +6,26 @@ import {
   DialogTitle,
   Modal,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
   borderRadius: 2,
+  overflow: 'auto',
+  maxHeight: '90vh'
 };
 
 const UniversalModal = ({ open, onClose, title, children, actions }) => {
+  const { t } = useTranslation();
+
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-title">
       <Box sx={style}>
@@ -32,13 +37,13 @@ const UniversalModal = ({ open, onClose, title, children, actions }) => {
           </DialogTitle>
         )}
 
-        <DialogContent dividers>{children}</DialogContent>
+        <DialogContent>{children}</DialogContent>
         <DialogActions>
           {actions ? (
             actions
           ) : (
             <Button onClick={onClose} color="primary">
-              Close
+              {t('modal.close')}
             </Button>
           )}
         </DialogActions>
